@@ -41,7 +41,7 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
             itemView.let { it ->
                 it.name.text = exercise.name
                 it.weight.text = exercise.weight.toString()
-                it.unit.text = exercise.unit
+                it.unit.text = exercise.unit.string
                 it.reps.text = exercise.reps.toString()
 
                 it.setOnLongClickListener {
@@ -55,9 +55,9 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                     dialog.setContentView(R.layout.weight_picker_dialog)
 
                     val numberPicker = dialog.weight_number_picker
-                    numberPicker.value = exercise.weight
                     numberPicker.minValue = 5
                     numberPicker.maxValue = 20
+                    numberPicker.value = exercise.weight
                     numberPicker.wrapSelectorWheel = false
 
                     dialog.setTitle("Weight")
@@ -85,9 +85,10 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                     val repPickers = mutableListOf<NumberPicker>()
                     for (set in exercise.reps.sets) {
                         val numberPicker = NumberPicker(it.context)
-                        numberPicker.value = exercise.weight
-                        numberPicker.minValue = 5
+                        numberPicker.minValue = 1
                         numberPicker.maxValue = 20
+                        numberPicker.value = set
+
                         numberPicker.wrapSelectorWheel = false
 
                         repPickers.add(numberPicker)

@@ -67,51 +67,10 @@ class MainFragment: Fragment() {
 
         workoutRV.layoutManager = LinearLayoutManager(context)
         workoutRV.adapter = adapter
-
-//        numberPicker()
-    }
-
-    private fun numberPicker() {
-        val d = Dialog(requireContext())
-        d.setTitle("Weight")
-        d.setContentView(R.layout.weight_picker_dialog)
-
-
-        d.weight_number_picker.let {
-            it.minValue = 5
-            it.maxValue = 20
-            it.wrapSelectorWheel = false
-        }
-
-
-        d.show()
-
-//        var value = 0
-//
-//        val ad = AlertDialog.Builder(requireContext())
-//        ad.setTitle("Weight")
-//        ad.setView(R.layout.weight_picker_dialog)
-//        ad.setPositiveButton("Save") { dialog, which ->
-//            value = weight_number_picker.value
-//            Timber.e("$value")
-//
-//        }
-//
-//        val x = ad.create()
-//        x.
-//
-//
-//
-//        val np = ad.show().weight_number_picker
-//        np.minValue = 5
-//        np.maxValue = 20
-//        np.wrapSelectorWheel = false
     }
 
     private fun putFakeDataInDB() {
         Database.instance().clearCalendarData()
         Database.instance().storeCalendarData(placeholderCalendarData())
     }
-
-
 }

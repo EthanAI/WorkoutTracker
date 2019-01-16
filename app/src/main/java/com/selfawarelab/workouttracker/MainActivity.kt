@@ -44,10 +44,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-//        val manager = supportFragmentManager
-//        val transaction = manager.beginTransaction()
-//        transaction.add(R.id.fragmentContainer, MainFragment())
-//        transaction.commit()
     }
 }

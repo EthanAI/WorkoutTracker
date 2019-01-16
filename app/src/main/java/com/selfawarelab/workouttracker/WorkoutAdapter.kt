@@ -34,7 +34,7 @@ class WorkoutAdapter() : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>(
             itemView.let {
                 it.name.text = exercise.name
                 it.weight.text = exercise.weight.toString()
-                it.unit.text = exercise.unit
+                it.unit.text = exercise.unit.string
                 it.reps.text = exercise.reps.toString()
             }
         }
