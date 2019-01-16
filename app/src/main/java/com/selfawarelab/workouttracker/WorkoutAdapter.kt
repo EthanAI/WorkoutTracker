@@ -31,7 +31,12 @@ class WorkoutAdapter() : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>(
 
     class WorkoutViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         fun bindData(exercise: Exercise) {
-            itemView.itemText.text = exercise.toString()
+            itemView.let {
+                it.name.text = exercise.name
+                it.weight.text = exercise.weight.toString()
+                it.unit.text = exercise.unit
+                it.reps.text = exercise.reps.toString()
+            }
         }
 
     }

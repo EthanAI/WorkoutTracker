@@ -19,7 +19,7 @@ class Database {
     }
     var instance: Database? = null
 
-    private val workoutListKey = "workoutListKey"
+    private val calendarDataKey = "calendarDataKey"
 
     companion object {
         private var instance: Database? = null
@@ -32,22 +32,22 @@ class Database {
 
     fun initDatabase(applicationContext: Context) {
         db = DBFactory.open(applicationContext)
-//        db.kryoInstance.setDefaultSerializer(SerializerFactory())
-
     }
 
-    fun clearWorkoutList() {
-        db.del(workoutListKey)
+    fun clearCalendarData() {
+        db.del(calendarDataKey)
     }
 
-    fun getWorkoutList(): List<WorkoutDay>? {
-        val workoutListString = db.get(workoutListKey)
-        return gson.fromJson(workoutListString, Array<WorkoutDay>::class.java).toList()
+    fun loadCalendarData(): List<WorkoutDay>? {
+        if(!db.exists(calendarDataKey)) return listOf()
+
+        val calendarDataString = db.get(calendarDataKey)
+        return gson.fromJson(calendarDataString, Array<WorkoutDay>::class.java).toList()
     }
 
-    fun storeWorkoutList(reservedShifts: List<WorkoutDay>) {
-        val workoutListString = gson.toJson(reservedShifts.toTypedArray())
-        db.put(workoutListKey, workoutListString)
+    fun storeCalendarData(calendarData: List<WorkoutDay>) {
+        val workoutListString = gson.toJson(calendarData.toTypedArray())
+        db.put(calendarDataKey, workoutListString)
     }
 
 //    private
