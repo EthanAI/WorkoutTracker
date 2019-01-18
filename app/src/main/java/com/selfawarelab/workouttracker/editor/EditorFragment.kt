@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.selfawarelab.workouttracker.*
 import kotlinx.android.synthetic.main.fragment_add.*
 import com.selfawarelab.workouttracker.MainViewModel.SelectedFragment.*
+import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
@@ -41,7 +42,7 @@ class EditorFragment: Fragment() {
 
         suggestionRV.layoutManager = LinearLayoutManager(context)
         suggestionRV.adapter = suggestionAdapter
-        suggestionAdapter.setDataList(suggestionList)
+//        suggestionAdapter.setDataList(suggestionList)
 
 
         addingRV.layoutManager = LinearLayoutManager(context)

@@ -1,23 +1,29 @@
-package com.selfawarelab.workouttracker
+package com.selfawarelab.workouttracker.database
 
 import android.content.Context
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.applandeo.materialcalendarview.EventDay
 import com.snappydb.DB
 import com.snappydb.DBFactory
-import com.snappydb.SnappydbException
-import timber.log.Timber
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.selfawarelab.workouttracker.WorkoutDay
+
 
 class Database {
-    lateinit var db: DB
-    private val gson: Gson by lazy {
-        GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .setPrettyPrinting()
-            .create()
+    private lateinit var db: DB
+
+    // TODO: this is black magic
+    private val mapper = ObjectMapper().apply {
+        val module = SimpleModule()
+
+        module.addSerializer(WorkoutDay::class.java, WorkoutDaySerializer())
+        module.addDeserializer(WorkoutDay::class.java, WorkoutDayDeserializer())
+        this.registerModule(module)
+
+
+//        this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+//        this.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY))
     }
-    var instance: Database? = null
 
     private val calendarDataKey = "calendarDataKey"
 
@@ -25,7 +31,8 @@ class Database {
         private var instance: Database? = null
         @Synchronized
         fun instance(): Database {
-            if (instance == null) instance = Database()
+            if (instance == null) instance =
+                    Database()
             return instance as Database
         }
     }
@@ -42,11 +49,12 @@ class Database {
         if(!db.exists(calendarDataKey)) return listOf()
 
         val calendarDataString = db.get(calendarDataKey)
-        return gson.fromJson(calendarDataString, Array<WorkoutDay>::class.java).toList()
+
+        return mapper.readValue(calendarDataString, Array<WorkoutDay>::class.java).toList()
     }
 
-    fun storeCalendarData(calendarData: List<WorkoutDay>) {
-        val workoutListString = gson.toJson(calendarData.toTypedArray())
+    fun storeCalendarData(calendarData: List<EventDay>) {
+        val workoutListString = mapper.writeValueAsString(calendarData)
         db.put(calendarDataKey, workoutListString)
     }
 

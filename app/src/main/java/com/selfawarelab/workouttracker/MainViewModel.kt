@@ -3,6 +3,7 @@ package com.selfawarelab.workouttracker
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.applandeo.materialcalendarview.EventDay
+import com.selfawarelab.workouttracker.database.Database
 
 class MainViewModel: ViewModel() {
     val selectedFragment = MutableLiveData<SelectedFragment>().apply { value = SelectedFragment.CALENDAR }
