@@ -15,7 +15,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
 class EditorFragment: Fragment() {
-    private val suggestionList = Database.instance().loadCalendarData()?.toMutableList()!!
+    private val exerciseSuggestionList = Database.instance().loadCalendarData()?.toMutableList()!!
     private val newWorkoutDay = WorkoutDay()
     private val suggestionAdapter = SuggestionAdapter()
     private val editorAdapter = EditorAdapter()
@@ -42,7 +42,7 @@ class EditorFragment: Fragment() {
 
         suggestionRV.layoutManager = LinearLayoutManager(context)
         suggestionRV.adapter = suggestionAdapter
-//        suggestionAdapter.setDataList(suggestionList)
+        suggestionAdapter.setDataList(exerciseSuggestionList)
 
 
         addingRV.layoutManager = LinearLayoutManager(context)

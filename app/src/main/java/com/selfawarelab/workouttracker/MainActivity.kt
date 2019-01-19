@@ -8,6 +8,7 @@ import com.selfawarelab.workouttracker.MainViewModel.SelectedFragment.*
 import com.selfawarelab.workouttracker.database.Database
 import com.selfawarelab.workouttracker.editor.EditorFragment
 import timber.log.Timber
+import java.util.*
 
 /*
     Icons: Exercise categories:
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         Database.instance().initDatabase(applicationContext)
         Database.instance().clearCalendarData()
 
+        addExerciseSuggestionsIfNone()
+
         viewModel.selectedFragment.observe(this, Observer { selectedFragment ->
             when (selectedFragment) {
                 CALENDAR -> {
@@ -45,5 +48,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun addExerciseSuggestionsIfNone() {
+        // A little hacky to make a dated object and hide it in the past, but works for now
+        val calendarData = Database.instance().loadCalendarData()
+        if(calendarData == null || calendarData.isEmpty() || calendarData[0].workout.exerciseList.isEmpty()) {
+            val initialData = mutableListOf<WorkoutDay>()
+
+            val exerciseSuggestionList = getInitialExerciseSuggestionList()
+            val ancientDay = Calendar.getInstance()
+            ancientDay.timeInMillis = 0
+            val workout = Workout(exerciseSuggestionList)
+            val workoutDay = WorkoutDay(ancientDay, workout)
+
+            initialData.add(workoutDay)
+
+            Database.instance().storeCalendarData(initialData)
+        }
     }
 }

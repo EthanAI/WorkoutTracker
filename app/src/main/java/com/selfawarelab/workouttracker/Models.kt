@@ -1,8 +1,8 @@
 package com.selfawarelab.workouttracker
 
 import com.applandeo.materialcalendarview.EventDay
-import com.selfawarelab.workouttracker.Unit.LBS
-import com.selfawarelab.workouttracker.Unit.MACHINE
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.selfawarelab.workouttracker.Unit.*
 import java.util.*
 
 class WorkoutDay(day: Calendar, val workout: Workout) : EventDay(day, workout.icon) {
@@ -15,7 +15,7 @@ class WorkoutDay(day: Calendar, val workout: Workout) : EventDay(day, workout.ic
     }
 }
 
-fun placeholderCalendarData(): List<WorkoutDay> = listOf(WorkoutDay(placeholderWorkout()))
+//fun placeholderCalendarData(): List<WorkoutDay> = listOf(WorkoutDay(placeholderWorkout()))
 
 // TODO: Make val icon part of exercise so multiple icons can stack up per day
 class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
@@ -33,16 +33,19 @@ class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
     }
 }
 
-fun placeholderWorkout(): Workout = Workout(
-    mutableListOf(
-        Exercise("Row", 50, LBS, Reps(10, 10, 8)),
-        Exercise("Curl", 25, LBS, Reps(12, 10, 8)),
-        Exercise("Bench Press", 10, MACHINE, Reps(12, 12, 5))
-    )
-)
+//fun placeholderWorkout(): Workout = Workout(
+//    mutableListOf(
+//        Exercise("Row", 50, LBS, Reps(10, 10, 8)),
+//        Exercise("Curl", 25, LBS, Reps(12, 10, 8)),
+//        Exercise("Bench Press", 10, MACHINE, Reps(12, 12, 5))
+//    )
+//)
 
 // TODO: Handle category icons
 class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps) {
+    constructor(name: String, weight: Int, unit: Unit, vararg reps: Int) : this(name, weight, unit, Reps(*reps))
+    constructor(): this("", 0, LBS, Reps())
+
     override fun toString(): String {
         return "$name $weight $unit $reps"
     }
@@ -50,22 +53,34 @@ class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps
 
 enum class Unit(val string: String) {
     LBS("lbs."),
-    MACHINE("sel.")
+    MACHINE("sel."),
+    BODYWEIGHT("bodyweight")
+
 }
 
 // TODO: Handle different weights per set
-class Reps() {
-    lateinit var sets: MutableList<Int>
-
-    constructor(vararg sets: Int) : this() {
-        this.sets = sets.asList().toMutableList()
-    }
-
-    constructor(sets: List<Int>) : this() {
-        this.sets = sets.toMutableList()
-    }
+class Reps(val sets: MutableList<Int>) {
+    constructor(vararg sets: Int) : this(mutableListOf(*sets.toTypedArray()))
+    constructor(): this(mutableListOf()) // Jackson deserialization seems to require empty constructors
 
     override fun toString(): String {
         return sets.fold("") { string: String, int -> string.plus("$int ") }
     }
+}
+
+fun getInitialExerciseSuggestionList(): MutableList<Exercise> {
+    val exerciseSuggestionList = mutableListOf<Exercise>()
+
+    exerciseSuggestionList.add(Exercise("Curl - Pair", 50, LBS, 10, 10, 10))
+    exerciseSuggestionList.add(Exercise("Triceps - Pair",60, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Pulldown",100, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Row",110, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Shrugs",60, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Benchpress",100, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Benchpress - incline",90, LBS, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Shoulder lateral dumbbell",10, LBS, 10, 10, 10 ))
+//    exerciseSuggestionList.add(Exercise("Back Extension",null, BODYWEIGHT, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Squats",0, LBS, 10, 10, 10 ))
+
+    return exerciseSuggestionList
 }
