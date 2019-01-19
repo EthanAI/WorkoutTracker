@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.selfawarelab.workouttracker.WorkoutDay
 import java.io.IOException
 
+// TODO: remove duplicate storage of values
 class WorkoutDaySerializer private constructor(t: Class<WorkoutDay>?) : StdSerializer<WorkoutDay>(t) {
     constructor() : this(null)
 
@@ -16,7 +17,7 @@ class WorkoutDaySerializer private constructor(t: Class<WorkoutDay>?) : StdSeria
         jgen.writeStartObject()
 
         jgen.writeObjectField("workout", value.workout)
-        jgen.writeObjectField("dayString", value.day)
+//        jgen.writeObjectField("dayString", value.day)
         jgen.writeNumberField("mDrawable", value.workout.icon)
         jgen.writeBooleanField("mIsDisabled", !value.isEnabled)
 

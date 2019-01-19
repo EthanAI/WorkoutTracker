@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModel
 import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.database.Database
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
     val selectedFragment = MutableLiveData<SelectedFragment>().apply { value = SelectedFragment.CALENDAR }
     val calendarData = mutableListOf<EventDay>()
 

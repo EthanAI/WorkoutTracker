@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import java.util.*
 
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
     private val adapter = WorkoutAdapter()
 
     private val viewModel by lazy {
@@ -38,7 +38,7 @@ class MainFragment: Fragment() {
 
 
         loadFromDB.setOnClickListener {
-//            loadWorkoutListFromDb()
+            //            loadWorkoutListFromDb()
             loadDifferentData()
         }
 
@@ -47,7 +47,7 @@ class MainFragment: Fragment() {
         }
 
         calendarView.setOnDayClickListener { eventDay ->
-//            if (eventDay !is WorkoutDay) {
+            //            if (eventDay !is WorkoutDay) {
 //                val clickedDay = eventDay.calendar
 //                val newWorkoutDay = WorkoutDay(clickedDay, placeholderWorkout())
 //                viewModel.addWorkoutDay(newWorkoutDay)

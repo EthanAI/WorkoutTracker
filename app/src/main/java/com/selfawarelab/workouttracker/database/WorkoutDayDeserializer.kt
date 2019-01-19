@@ -10,6 +10,7 @@ import com.selfawarelab.workouttracker.WorkoutDay
 import java.io.IOException
 import java.util.*
 
+// Obsolete but kept for reference
 internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDeserializer<WorkoutDay>(vc) {
     constructor() : this(null)
 

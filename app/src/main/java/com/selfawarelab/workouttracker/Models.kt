@@ -1,13 +1,11 @@
 package com.selfawarelab.workouttracker
 
 import com.applandeo.materialcalendarview.EventDay
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import java.util.*
 import com.selfawarelab.workouttracker.Unit.LBS
 import com.selfawarelab.workouttracker.Unit.MACHINE
-import com.selfawarelab.workouttracker.database.WorkoutDaySerializer
+import java.util.*
 
-class WorkoutDay(val day: Calendar, val workout: Workout) : EventDay(day, workout.icon) {
+class WorkoutDay(day: Calendar, val workout: Workout) : EventDay(day, workout.icon) {
     constructor() : this(Calendar.getInstance(), Workout())
     constructor(workout: Workout) : this(Calendar.getInstance(), workout)
 
@@ -19,6 +17,7 @@ class WorkoutDay(val day: Calendar, val workout: Workout) : EventDay(day, workou
 
 fun placeholderCalendarData(): List<WorkoutDay> = listOf(WorkoutDay(placeholderWorkout()))
 
+// TODO: Make val icon part of exercise so multiple icons can stack up per day
 class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
     constructor() : this(mutableListOf<Exercise>(), R.drawable.ic_accessibility_black_24dp)
     constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, R.drawable.ic_accessibility_black_24dp)

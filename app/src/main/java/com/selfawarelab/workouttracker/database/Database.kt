@@ -2,27 +2,25 @@ package com.selfawarelab.workouttracker.database
 
 import android.content.Context
 import com.applandeo.materialcalendarview.EventDay
-import com.snappydb.DB
-import com.snappydb.DBFactory
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.selfawarelab.workouttracker.WorkoutDay
+import com.snappydb.DB
+import com.snappydb.DBFactory
 
 
 class Database {
     private lateinit var db: DB
 
-    // TODO: this is black magic
     private val mapper = ObjectMapper().apply {
         val module = SimpleModule()
 
         module.addSerializer(WorkoutDay::class.java, WorkoutDaySerializer())
-        module.addDeserializer(WorkoutDay::class.java, WorkoutDayDeserializer())
+//        module.addDeserializer(WorkoutDay::class.java, WorkoutDayDeserializer())
         this.registerModule(module)
 
-
-//        this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-//        this.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY))
+        this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
     private val calendarDataKey = "calendarDataKey"
@@ -46,7 +44,7 @@ class Database {
     }
 
     fun loadCalendarData(): List<WorkoutDay>? {
-        if(!db.exists(calendarDataKey)) return listOf()
+        if (!db.exists(calendarDataKey)) return listOf()
 
         val calendarDataString = db.get(calendarDataKey)
 
@@ -57,23 +55,4 @@ class Database {
         val workoutListString = mapper.writeValueAsString(calendarData)
         db.put(calendarDataKey, workoutListString)
     }
-
-//    private
-//    fun safeGet(key: String): String? {
-//        return try {
-//            db.exists(key) then { db.get(key) }
-//        } catch (e: SnappydbException) {
-//            Timber.e(e, "Database Error ->")
-//            null
-//        }
-//    }
-
-//    private
-//    fun safePut(key: String, obj: String) {
-//        try {
-//            db.put(key, obj)
-//        } catch (e: SnappydbException) {
-//            Timber.e(e, "Database Error ->")
-//        }
-//    }
 }
