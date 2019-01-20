@@ -44,87 +44,120 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                 it.unit.text = exercise.unit.string
                 it.reps.text = exercise.reps.toString()
 
+                // Allow item deletion
                 it.setOnLongClickListener {
                     data?.workout?.exerciseList?.removeAt(adapterPosition)
                     notifyDataSetChanged()
                     true
                 }
 
-                val weightClickListener = View.OnClickListener { view: View ->
-                    val dialog = Dialog(it.context)
-                    dialog.setContentView(R.layout.weight_picker_dialog)
-
-                    val numberPicker = dialog.weight_number_picker
-                    numberPicker.displayedValues = getValueList()
-                    numberPicker.minValue = 0
-                    numberPicker.maxValue = 40
-                    numberPicker.value = exercise.weight / weightIncrement
-                    numberPicker.wrapSelectorWheel = false
-
-                    dialog.setTitle("Weight")
-                    dialog.saveWeight.setOnClickListener {
-                        exercise.weight = numberPicker.value * weightIncrement
-                        notifyDataSetChanged()
-                        dialog.dismiss()
-                    }
-                    dialog.cancelWeight.setOnClickListener {
-                        dialog.cancel()
-                    }
-
-                    dialog.show()
-                }
-
+                val weightClickListener = getWeightOnClickListener(exercise)
                 it.weight.setOnClickListener(weightClickListener)
                 it.unit.setOnClickListener(weightClickListener)
 
-
-                it.reps.setOnClickListener {
-                    val dialog = Dialog(it.context)
-                    dialog.setContentView(R.layout.reps_picker_dialog)
-
-                    // Add a number picker for each rep entry
-                    val repPickers = mutableListOf<NumberPicker>()
-                    for (set in exercise.reps.sets) {
-                        val numberPicker = NumberPicker(it.context)
-                        numberPicker.minValue = 1
-                        numberPicker.maxValue = 20
-                        numberPicker.value = set
-
-                        numberPicker.wrapSelectorWheel = false
-
-                        repPickers.add(numberPicker)
-                        dialog.pickerLayout.addView(numberPicker)
-                    }
-
-
-                    dialog.setTitle("Reps")
-                    dialog.saveReps.setOnClickListener {
-                        val newSets = repPickers.fold(mutableListOf<Int>()) { sets, repPicker ->
-                            sets.add(repPicker.value)
-                            sets
-                        }
-
-                        exercise.reps = Reps(newSets)
-                        notifyDataSetChanged()
-                        dialog.dismiss()
-                    }
-                    dialog.cancelReps.setOnClickListener {
-                        dialog.cancel()
-                    }
-
-                    dialog.show()
-                }
+                val repsClickListener = getRepsOnClickListener(exercise)
+                it.reps.setOnClickListener(repsClickListener)
             }
         }
-    }
 
-    val weightIncrement = 5
-    fun getValueList(): Array<String> {
-        val valueList = mutableListOf<String>()
-        for(i in 0..40) {
-            valueList.add("${i * weightIncrement}")
+        // For Weight picking
+        private val weightIncrement = 5
+        private val weightIncrementStart = 0
+        private val weightIncrementCount = 40
+
+        private fun weightToPosition(weight: Int) = weightIncrementCount - (weight / weightIncrement)
+        private fun positionToWeight(position: Int) = (weightIncrementCount - position) * weightIncrement
+
+        private fun getWeightValueList(): Array<String> {
+            val valueList = mutableListOf<String>()
+            for (i in weightIncrementStart..weightIncrementCount) {
+                valueList.add("${i * weightIncrement}")
+            }
+            return valueList.reversed().toTypedArray()
         }
-        return valueList.toTypedArray()
+
+        private fun getWeightOnClickListener(exercise: Exercise): View.OnClickListener {
+            return View.OnClickListener { view: View ->
+                val dialog = Dialog(view.context)
+                dialog.setContentView(R.layout.weight_picker_dialog)
+
+                val numberPicker = dialog.weight_number_picker.apply {
+                    this.displayedValues = getWeightValueList()
+                    this.minValue = 0
+                    this.maxValue = weightIncrementCount
+                    this.value = weightToPosition(exercise.weight)
+                    this.wrapSelectorWheel = false
+                }
+
+                dialog.setTitle("Weight")
+                dialog.saveWeight.setOnClickListener {
+                    exercise.weight = positionToWeight(numberPicker.value)
+                    notifyDataSetChanged()
+                    dialog.dismiss()
+                }
+                dialog.cancelWeight.setOnClickListener {
+                    dialog.cancel()
+                }
+
+                dialog.show()
+            }
+        }
+
+        // For rep picking
+        private val repMin = 1
+        private val repMax = 20
+
+        private fun repToPosition(rep: Int) = repMax - rep + repMin
+        private fun positionToRep(position: Int) = repMax - position + repMin
+
+        private fun getRepValueList(): Array<String> {
+            val valueList = mutableListOf<String>()
+            for (i in repMin..repMax) {
+                valueList.add("$i")
+            }
+            return valueList.reversed().toTypedArray()
+        }
+
+
+        private fun getRepsOnClickListener(exercise: Exercise): View.OnClickListener {
+            return View.OnClickListener { view: View ->
+                val dialog = Dialog(view.context)
+                dialog.setContentView(R.layout.reps_picker_dialog)
+
+                // Add a number picker for each rep entry
+                val repPickers = mutableListOf<NumberPicker>()
+                for (set in exercise.reps.sets) {
+                    NumberPicker(view.context).apply {
+                        this.displayedValues = getRepValueList()
+                        this.minValue = 1
+                        this.maxValue = repMax
+                        this.value = repToPosition(set)
+                        this.wrapSelectorWheel = false
+
+                        repPickers.add(this)
+                        dialog.pickerLayout.addView(this)
+                    }
+                }
+
+
+                dialog.setTitle("Reps")
+                dialog.saveReps.setOnClickListener {
+                    val newSets = repPickers.fold(mutableListOf<Int>()) { sets, repPicker ->
+                        sets.add(positionToRep(repPicker.value))
+                        sets
+                    }
+
+                    exercise.reps = Reps(newSets)
+                    notifyDataSetChanged()
+                    dialog.dismiss()
+                }
+                dialog.cancelReps.setOnClickListener {
+                    dialog.cancel()
+                }
+
+                dialog.show()
+            }
+        }
     }
 }
 
