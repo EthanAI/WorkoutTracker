@@ -55,14 +55,15 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                     dialog.setContentView(R.layout.weight_picker_dialog)
 
                     val numberPicker = dialog.weight_number_picker
-                    numberPicker.minValue = 5
-                    numberPicker.maxValue = 20
-                    numberPicker.value = exercise.weight
+                    numberPicker.displayedValues = getValueList()
+                    numberPicker.minValue = 0
+                    numberPicker.maxValue = 40
+                    numberPicker.value = exercise.weight / weightIncrement
                     numberPicker.wrapSelectorWheel = false
 
                     dialog.setTitle("Weight")
                     dialog.saveWeight.setOnClickListener {
-                        exercise.weight = numberPicker.value
+                        exercise.weight = numberPicker.value * weightIncrement
                         notifyDataSetChanged()
                         dialog.dismiss()
                     }
@@ -116,4 +117,14 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
             }
         }
     }
+
+    val weightIncrement = 5
+    fun getValueList(): Array<String> {
+        val valueList = mutableListOf<String>()
+        for(i in 0..40) {
+            valueList.add("${i * weightIncrement}")
+        }
+        return valueList.toTypedArray()
+    }
 }
+
