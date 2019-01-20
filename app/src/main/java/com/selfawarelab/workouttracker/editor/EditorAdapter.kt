@@ -118,28 +118,21 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
             return valueList.reversed().toTypedArray()
         }
 
-
         private fun getRepsOnClickListener(exercise: Exercise): View.OnClickListener {
             return View.OnClickListener { view: View ->
                 val dialog = Dialog(view.context)
                 dialog.setContentView(R.layout.reps_picker_dialog)
+                dialog.setTitle("Reps")
 
+                val repPickers = mutableListOf<NumberPicker>() // Hold all the pickers we need for this
                 // Add a number picker for each rep entry
-                val repPickers = mutableListOf<NumberPicker>()
                 for (set in exercise.reps.sets) {
-                    NumberPicker(view.context).apply {
-                        this.displayedValues = getRepValueList()
-                        this.minValue = 1
-                        this.maxValue = repMax
-                        this.value = repToPosition(set)
-                        this.wrapSelectorWheel = false
-
-                        repPickers.add(this)
-                        dialog.pickerLayout.addView(this)
-                    }
+                    addRepPicker(dialog, repPickers, set)
                 }
 
-                dialog.setTitle("Reps")
+                dialog.addSet.setOnClickListener { addRepPicker(dialog, repPickers) }
+                dialog.deleteSet.setOnClickListener { removeRepPicker(dialog, repPickers) }
+
                 dialog.saveReps.setOnClickListener {
                     val newSets = repPickers.fold(mutableListOf<Int>()) { sets, repPicker ->
                         sets.add(positionToRep(repPicker.value))
@@ -156,6 +149,30 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
 
                 dialog.show()
             }
+        }
+
+        private fun addRepPicker(dialog: Dialog, repPickers: MutableList<NumberPicker>, startValue: Int = 10) {
+            if(repPickers.size == 5) return
+
+            NumberPicker(dialog.context).apply {
+                this.displayedValues = getRepValueList()
+                this.minValue = 1
+                this.maxValue = repMax
+                this.value = repToPosition(startValue)
+                this.wrapSelectorWheel = false
+
+                repPickers.add(this)
+                val endPosition = dialog.pickerLayout.childCount - 1
+                dialog.pickerLayout.addView(this, endPosition)
+            }
+        }
+
+        private fun removeRepPicker(dialog: Dialog, repPickers: MutableList<NumberPicker>) {
+            if(repPickers.size == 1) return
+
+            val lastPickerIndex = dialog.pickerLayout.childCount - 2
+            dialog.pickerLayout.removeViewAt(lastPickerIndex)
+            repPickers.removeAt(repPickers.lastIndex)
         }
     }
 }
