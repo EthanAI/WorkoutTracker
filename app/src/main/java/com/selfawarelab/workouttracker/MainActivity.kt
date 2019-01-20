@@ -1,12 +1,10 @@
 package com.selfawarelab.workouttracker
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.arch.lifecycle.ViewModelProviders
-import com.selfawarelab.workouttracker.MainViewModel.SelectedFragment.*
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.selfawarelab.workouttracker.database.Database
-import com.selfawarelab.workouttracker.editor.EditorFragment
 import timber.log.Timber
 import java.util.*
 
@@ -19,11 +17,12 @@ import java.util.*
     Shoulders
     Core: abs, lower back
  */
+// TODO: multiple icons per day
+// TODO: icons kept in Exercise object
+// TODO: Exercise adder fragment
+// TODO: Backup to cloud
+// TODO: Possible weight changes per set
 class MainActivity : AppCompatActivity() {
-    private val viewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,27 +32,14 @@ class MainActivity : AppCompatActivity() {
         Database.instance().clearCalendarData()
 
         addExerciseSuggestionsIfNone()
-
-        viewModel.selectedFragment.observe(this, Observer { selectedFragment ->
-            when (selectedFragment) {
-                CALENDAR -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, MainFragment())
-                        .commit()
-                }
-                EDITOR -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, EditorFragment())
-                        .commit()
-                }
-            }
-        })
     }
+
+    override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
 
     private fun addExerciseSuggestionsIfNone() {
         // A little hacky to make a dated object and hide it in the past, but works for now
         val calendarData = Database.instance().loadCalendarData()
-        if(calendarData == null || calendarData.isEmpty() || calendarData[0].workout.exerciseList.isEmpty()) {
+        if (calendarData == null || calendarData.isEmpty() || calendarData[0].workout.exerciseList.isEmpty()) {
             val initialData = mutableListOf<WorkoutDay>()
 
             val exerciseSuggestionList = getInitialExerciseSuggestionList()

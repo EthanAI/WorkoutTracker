@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.selfawarelab.workouttracker.MainViewModel.SelectedFragment.EDITOR
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import java.util.*
@@ -33,7 +33,7 @@ class MainFragment : Fragment() {
 
 
         launchEditorButton.setOnClickListener {
-            viewModel.selectedFragment.value = EDITOR
+            findNavController().navigate(R.id.action_mainFragment_to_editorFragment)
         }
 
         calendarView.setOnDayClickListener { eventDay ->
@@ -46,8 +46,8 @@ class MainFragment : Fragment() {
                 adapter.setDataList(eventDay)
                 adapter.notifyDataSetChanged()
 
-                Timber.e(
-                    "eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} $workout")
+                Timber.e("eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} $workout"
+                )
             }
         }
 

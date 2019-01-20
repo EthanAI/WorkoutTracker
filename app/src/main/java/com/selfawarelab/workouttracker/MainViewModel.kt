@@ -6,13 +6,7 @@ import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.database.Database
 
 class MainViewModel : ViewModel() {
-    val selectedFragment = MutableLiveData<SelectedFragment>().apply { value = SelectedFragment.CALENDAR }
     val calendarData = mutableListOf<EventDay>()
-
-    enum class SelectedFragment {
-        CALENDAR,
-        EDITOR
-    }
 
     fun addWorkoutDay(workoutDay: WorkoutDay) {
         calendarData.add(workoutDay)

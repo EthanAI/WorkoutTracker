@@ -7,14 +7,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.selfawarelab.workouttracker.*
-import kotlinx.android.synthetic.main.fragment_add.*
-import com.selfawarelab.workouttracker.MainViewModel.SelectedFragment.*
+import androidx.navigation.fragment.findNavController
+import com.selfawarelab.workouttracker.Exercise
+import com.selfawarelab.workouttracker.MainViewModel
+import com.selfawarelab.workouttracker.R
+import com.selfawarelab.workouttracker.WorkoutDay
 import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.android.synthetic.main.fragment_add.*
 import timber.log.Timber
 
-class EditorFragment: Fragment() {
+class EditorFragment : Fragment() {
     private val exerciseSuggestionList = Database.instance().loadCalendarData()?.toMutableList()!!
     private val newWorkoutDay = WorkoutDay()
     private val suggestionAdapter = SuggestionAdapter()
@@ -37,7 +40,7 @@ class EditorFragment: Fragment() {
         submit.setOnClickListener {
             Timber.e("${editorAdapter.data?.workout?.exerciseList?.size}")
             viewModel.addWorkoutDay(newWorkoutDay)
-            viewModel.selectedFragment.value = CALENDAR
+            findNavController().popBackStack()
         }
 
         suggestionRV.layoutManager = LinearLayoutManager(context)
