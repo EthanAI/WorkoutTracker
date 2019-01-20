@@ -139,7 +139,6 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                     }
                 }
 
-
                 dialog.setTitle("Reps")
                 dialog.saveReps.setOnClickListener {
                     val newSets = repPickers.fold(mutableListOf<Int>()) { sets, repPicker ->
