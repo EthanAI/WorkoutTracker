@@ -1,7 +1,6 @@
 package com.selfawarelab.workouttracker
 
 import com.applandeo.materialcalendarview.EventDay
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.selfawarelab.workouttracker.Unit.*
 import java.util.*
 
@@ -9,39 +8,22 @@ class WorkoutDay(day: Calendar, val workout: Workout) : EventDay(day, workout.ic
     constructor() : this(Calendar.getInstance(), Workout())
     constructor(workout: Workout) : this(Calendar.getInstance(), workout)
 
-
     fun getDateString(): String {
         return "${calendar.get(Calendar.YEAR)} ${calendar.get(Calendar.MONTH)} ${calendar.get(Calendar.DAY_OF_MONTH)}"
     }
 }
 
-//fun placeholderCalendarData(): List<WorkoutDay> = listOf(WorkoutDay(placeholderWorkout()))
-
 // TODO: Make val icon part of exercise so multiple icons can stack up per day
 class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
     constructor() : this(mutableListOf<Exercise>(), R.drawable.ic_accessibility_black_24dp)
     constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, R.drawable.ic_accessibility_black_24dp)
-    constructor(mDrawable: Int) : this(mutableListOf<Exercise>(), mDrawable) {
-
-    }
-
-    // Defaults icon
-//    val defaultIcon = R.drawable.ic_accessibility_black_24dp
+    constructor(mDrawable: Int) : this(mutableListOf<Exercise>(), mDrawable)
 
     override fun toString(): String {
         return exerciseList.joinToString { "\n" }
     }
 }
 
-//fun placeholderWorkout(): Workout = Workout(
-//    mutableListOf(
-//        Exercise("Row", 50, LBS, Reps(10, 10, 8)),
-//        Exercise("Curl", 25, LBS, Reps(12, 10, 8)),
-//        Exercise("Bench Press", 10, MACHINE, Reps(12, 12, 5))
-//    )
-//)
-
-// TODO: Handle category icons
 class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps) {
     constructor(name: String, weight: Int, unit: Unit, vararg reps: Int) : this(name, weight, unit, Reps(*reps))
     constructor(): this("", 0, LBS, Reps())
@@ -53,9 +35,8 @@ class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps
 
 enum class Unit(val string: String) {
     LBS("lbs."),
-    MACHINE("sel."),
-    BODYWEIGHT("bodyweight")
-
+    KGS("kgs"),
+    MACHINE("sel.")
 }
 
 // TODO: Handle different weights per set
@@ -79,7 +60,7 @@ fun getInitialExerciseSuggestionList(): MutableList<Exercise> {
     exerciseSuggestionList.add(Exercise("Benchpress",100, LBS, 10, 10, 10 ))
     exerciseSuggestionList.add(Exercise("Benchpress - incline",90, LBS, 10, 10, 10 ))
     exerciseSuggestionList.add(Exercise("Shoulder lateral dumbbell",10, LBS, 10, 10, 10 ))
-//    exerciseSuggestionList.add(Exercise("Back Extension",null, BODYWEIGHT, 10, 10, 10 ))
+    exerciseSuggestionList.add(Exercise("Back Extension",0, LBS, 10, 10, 10 ))
     exerciseSuggestionList.add(Exercise("Squats",0, LBS, 10, 10, 10 ))
 
     return exerciseSuggestionList
