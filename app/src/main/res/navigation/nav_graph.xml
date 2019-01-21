@@ -3,10 +3,15 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_graph" app:startDestination="@id/mainFragment">
 
-    <fragment android:id="@+id/mainFragment" android:name="com.selfawarelab.workouttracker.MainFragment"
+    <fragment android:id="@+id/mainFragment"
+              android:name="com.selfawarelab.workouttracker.MainFragment"
               android:label="MainFragment">
-        <action android:id="@+id/action_mainFragment_to_editorFragment" app:destination="@id/editorFragment"/>
+        <action android:id="@+id/action_mainFragment_to_editorFragment"
+                app:destination="@id/editorFragment"/>
     </fragment>
-    <fragment android:id="@+id/editorFragment" android:name="com.selfawarelab.workouttracker.editor.EditorFragment"
-              android:label="EditorFragment"/>
+    <fragment android:id="@+id/editorFragment"
+              android:name="com.selfawarelab.workouttracker.editor.EditorFragment"
+              android:label="EditorFragment">
+        <argument android:name="calendarMills" app:argType="long"/>
+    </fragment>
 </navigation>

@@ -11,6 +11,8 @@
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:type="one_day_picker"
+
             app:layout_constraintTop_toTopOf="parent"
     />
 

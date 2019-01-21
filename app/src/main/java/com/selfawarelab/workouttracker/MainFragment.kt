@@ -37,7 +37,9 @@ class MainFragment : Fragment() {
         }
 
         launchEditorButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_editorFragment)
+            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
+            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
+            findNavController().navigate(action)
         }
 
         calendarView.setOnDayClickListener { eventDay ->

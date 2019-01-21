@@ -8,18 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.selfawarelab.workouttracker.Exercise
-import com.selfawarelab.workouttracker.MainViewModel
-import com.selfawarelab.workouttracker.R
-import com.selfawarelab.workouttracker.WorkoutDay
+import com.selfawarelab.workouttracker.*
 import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_add.*
 import timber.log.Timber
+import java.util.*
 
 class EditorFragment : Fragment() {
     private val exerciseSuggestionList = Database.instance().loadCalendarData()?.toMutableList()!!
-    private val newWorkoutDay = WorkoutDay()
+    private lateinit var newWorkoutDay: WorkoutDay
     private val suggestionAdapter = SuggestionAdapter()
     private val editorAdapter = EditorAdapter()
 
@@ -33,6 +31,11 @@ class EditorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val calendarMills = EditorFragmentArgs.fromBundle(arguments!!).calendarMills
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = calendarMills
+        newWorkoutDay = WorkoutDay(calendar, Workout(), R.drawable.ic_accessibility_black_24dp)
 
         addExercise.setOnClickListener {
         }
