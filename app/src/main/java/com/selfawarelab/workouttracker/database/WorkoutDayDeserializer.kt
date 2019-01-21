@@ -4,13 +4,14 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import com.selfawarelab.workouttracker.Workout
 import com.selfawarelab.workouttracker.WorkoutDay
 import java.io.IOException
 import java.util.*
 
-// Obsolete but kept for reference
 internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDeserializer<WorkoutDay>(vc) {
     constructor() : this(null)
 
@@ -18,13 +19,26 @@ internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDe
     override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): WorkoutDay {
         val node = jp.codec.readTree<JsonNode>(jp)
 
-        //        Workout workout = node.get("workout")  // TODO: Understand more about jackson deserializing objects .writeObjectField
-        val dayString = node.get("dayString").asLong()
+        val workoutNode = node.get("workout")
+        val workout = ObjectMapper().treeToValue<Workout>(workoutNode)
+
+        val dayString = node.get("mDay").asLong()
         val day = Calendar.getInstance()
         day.timeInMillis = dayString
-        val mDrawable = node.get("mDrawable").asInt()
-        val mIsDisabled = !node.get("mIsDisabled").asBoolean() // TODO: figure out how to do this. Default jackson is accessing these so...
 
-        return WorkoutDay(day, Workout(mDrawable))
+        val mDrawable = node.get("mDrawable").asInt()
+        val mIsDisabled = node.get("mIsDisabled").asBoolean()
+
+        // Set private fields in the inherited class EventDay
+        val workoutDay = WorkoutDay(day, workout, mDrawable)
+//        var field = workoutDay::class.java.superclass.getDeclaredField("mDrawable")
+//        field.isAccessible = true
+//        field.setLong(workoutDay, mDrawable)
+
+        val field = workoutDay::class.java.superclass.getDeclaredField("mIsDisabled")
+        field.isAccessible = true
+        field.setBoolean(workoutDay, mIsDisabled)
+
+        return workoutDay
     }
 }

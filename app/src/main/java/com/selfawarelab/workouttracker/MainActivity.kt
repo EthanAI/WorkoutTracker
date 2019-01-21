@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
         Database.instance().initDatabase(applicationContext)
+
         Database.instance().clearCalendarData()
 
         addExerciseSuggestionsIfNone()

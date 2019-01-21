@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.selfawarelab.workouttracker.database.Database
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import java.util.*
@@ -31,6 +32,9 @@ class MainFragment : Fragment() {
         calendarView.setEvents(viewModel.calendarData)
         Timber.e("calendarData: ${viewModel.calendarData.size}")
 
+        reset.setOnClickListener {
+            Database.instance().clearCalendarData()
+        }
 
         launchEditorButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_editorFragment)

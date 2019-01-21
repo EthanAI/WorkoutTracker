@@ -17,7 +17,7 @@ class Database {
         val module = SimpleModule()
 
         module.addSerializer(WorkoutDay::class.java, WorkoutDaySerializer())
-//        module.addDeserializer(WorkoutDay::class.java, WorkoutDayDeserializer())
+        module.addDeserializer(WorkoutDay::class.java, WorkoutDayDeserializer())
         this.registerModule(module)
 
         this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -47,7 +47,6 @@ class Database {
         if (!db.exists(calendarDataKey)) return listOf()
 
         val calendarDataString = db.get(calendarDataKey)
-
         return mapper.readValue(calendarDataString, Array<WorkoutDay>::class.java).toList()
     }
 

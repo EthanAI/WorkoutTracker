@@ -4,9 +4,10 @@ import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.Unit.*
 import java.util.*
 
-class WorkoutDay(day: Calendar, val workout: Workout) : EventDay(day, workout.icon) {
-    constructor() : this(Calendar.getInstance(), Workout())
-    constructor(workout: Workout) : this(Calendar.getInstance(), workout)
+class WorkoutDay(day: Calendar, val workout: Workout, icon: Int) : EventDay(day, icon) {
+    constructor() : this(Calendar.getInstance(), Workout(), 0)
+    constructor(workout: Workout) : this(Calendar.getInstance(), workout, 0)
+    constructor(calendar: Calendar, workout: Workout) : this(calendar, workout, 0)
 
     fun getDateString(): String {
         return "${calendar.get(Calendar.YEAR)} ${calendar.get(Calendar.MONTH)} ${calendar.get(Calendar.DAY_OF_MONTH)}"
