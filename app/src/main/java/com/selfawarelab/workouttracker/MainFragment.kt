@@ -42,9 +42,31 @@ class MainFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+//        val y1 = Calendar.getInstance()
+//        y1.set(Calendar.DAY_OF_MONTH, 18)
+//
+//        val y2 = Calendar.getInstance()
+//        y2.set(Calendar.DAY_OF_MONTH, 17)
+//
+//        val y3 = Calendar.getInstance()
+//        y3.set(Calendar.DAY_OF_MONTH, 16)
+//
+//        calendarView.setDate(y1)
+//        calendarView.setDisabledDays(listOf(y2))
+//        calendarView.selectedDates = listOf(y3)
+
+
+
         calendarView.setOnDayClickListener { eventDay ->
             if (eventDay !is WorkoutDay) {
                 Timber.e("Not WorkoutDay")
+                adapter.clearData()
+                adapter.notifyDataSetChanged()
+                
+//                val yesterday = Calendar.getInstance()
+//                yesterday.set(Calendar.DAY_OF_MONTH, 18)
+
+//                calendarView.setDisabledDays(mutableListOf(eventDay.calendar))
             } else {
                 val clickedDay = eventDay.calendar
                 val workout = eventDay.workout

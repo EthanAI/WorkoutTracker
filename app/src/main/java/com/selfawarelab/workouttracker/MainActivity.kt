@@ -22,6 +22,10 @@ import java.util.*
 // TODO: Exercise adder fragment
 // TODO: Backup to cloud
 // TODO: Possible weight changes per set
+// TODO: Total / streak counter
+// TODO: Input sets on the fly during rest period
+// TODO: Log past workouts (text)
+// TODO: Log past workouts (calendar UI)
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

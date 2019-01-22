@@ -19,6 +19,10 @@ class WorkoutAdapter() : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>(
         data = newData
     }
 
+    fun clearData() {
+        data = null
+    }
+
     override fun getItemCount(): Int {
         return if(data == null) 0
         else data?.workout?.exerciseList!!.size
