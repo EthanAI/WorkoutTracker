@@ -5,13 +5,32 @@ import com.selfawarelab.workouttracker.Unit.*
 import java.util.*
 
 class WorkoutDay(day: Calendar, val workout: Workout, icon: Int) : EventDay(day, icon) {
-    constructor() : this(Calendar.getInstance(), Workout(), 0)
-    constructor(workout: Workout) : this(Calendar.getInstance(), workout, 0)
-    constructor(calendar: Calendar, workout: Workout) : this(calendar, workout, 0)
+    constructor() : this(Calendar.getInstance(), Workout(), R.drawable.ic_accessibility_black_24dp)
+    constructor(calendar: Calendar) : this(calendar, Workout(), R.drawable.ic_accessibility_black_24dp)
+    constructor(workout: Workout) : this(Calendar.getInstance(), workout, R.drawable.ic_accessibility_black_24dp)
+    constructor(calendar: Calendar, workout: Workout) : this(calendar, workout, R.drawable.ic_accessibility_black_24dp)
 
-    fun getDateString(): String {
-        return "${calendar.get(Calendar.YEAR)} ${calendar.get(Calendar.MONTH)} ${calendar.get(Calendar.DAY_OF_MONTH)}"
+    fun addExercise(exercise: Exercise) {
+        workout.exerciseList.add(exercise)
     }
+    
+    fun removeExercise(exercise: Exercise) {
+        workout.exerciseList.remove(exercise)
+    }
+}
+
+
+fun Calendar.getDateString(): String {
+    return "${this.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())} ${this.get(Calendar.DAY_OF_MONTH)}, ${this.get(Calendar.YEAR)}"
+}
+
+fun getTodayStart(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.HOUR, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    return calendar
 }
 
 // TODO: Make val icon part of exercise so multiple icons can stack up per day

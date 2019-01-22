@@ -24,8 +24,11 @@ import java.util.*
 // TODO: Possible weight changes per set
 // TODO: Total / streak counter
 // TODO: Input sets on the fly during rest period
-// TODO: Log past workouts (text)
 // TODO: Log past workouts (calendar UI)
+// TODO: Time workouts
+// TODO: Public domain diagrams
+// TODO: Delete exercise
+// TODO: +/- Buttons for rep count
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

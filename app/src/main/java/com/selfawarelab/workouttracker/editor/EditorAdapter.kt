@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.reps_picker_dialog.*
 import kotlinx.android.synthetic.main.weight_picker_dialog.*
 
 class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
-    var data: WorkoutDay? = null
+    var workoutDay: WorkoutDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditorViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_editor, parent, false)
@@ -23,16 +23,16 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
     }
 
     fun setDataList(newData: WorkoutDay) {
-        data = newData
+        workoutDay = newData
     }
 
     override fun getItemCount(): Int {
-        return if (data == null) 0
-        else data?.workout?.exerciseList!!.size
+        return if (workoutDay == null) 0
+        else workoutDay?.workout?.exerciseList!!.size
     }
 
     override fun onBindViewHolder(holder: EditorViewHolder, position: Int) {
-        val exercise = data?.workout!!.exerciseList[position]
+        val exercise = workoutDay?.workout!!.exerciseList[position]
         holder.bindData(exercise)
     }
 
@@ -46,7 +46,8 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
 
                 // Allow item deletion
                 it.setOnLongClickListener {
-                    data?.workout?.exerciseList?.removeAt(adapterPosition)
+                    workoutDay?.removeExercise(exercise)
+//                    workoutDay?.workout?.exerciseList?.removeAt(adapterPosition)
                     notifyDataSetChanged()
                     true
                 }

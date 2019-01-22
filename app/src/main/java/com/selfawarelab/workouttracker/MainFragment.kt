@@ -16,6 +16,7 @@ import java.util.*
 
 class MainFragment : Fragment() {
     private val adapter = WorkoutAdapter()
+    private var clickedDay: Calendar = getTodayStart()
 
     private val viewModel by lazy {
         ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
@@ -32,13 +33,14 @@ class MainFragment : Fragment() {
         calendarView.setEvents(viewModel.calendarData)
         Timber.e("calendarData: ${viewModel.calendarData.size}")
 
-        reset.setOnClickListener {
+        upload.setOnClickListener {
             Database.instance().clearCalendarData()
         }
 
         launchEditorButton.setOnClickListener {
-            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
-            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
+//            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
+//            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
+            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(clickedDay.timeInMillis)
             findNavController().navigate(action)
         }
 
@@ -58,17 +60,18 @@ class MainFragment : Fragment() {
 
 
         calendarView.setOnDayClickListener { eventDay ->
+            clickedDay = eventDay.calendar
+
             if (eventDay !is WorkoutDay) {
                 Timber.e("Not WorkoutDay")
                 adapter.clearData()
                 adapter.notifyDataSetChanged()
-                
+
 //                val yesterday = Calendar.getInstance()
 //                yesterday.set(Calendar.DAY_OF_MONTH, 18)
 
 //                calendarView.setDisabledDays(mutableListOf(eventDay.calendar))
             } else {
-                val clickedDay = eventDay.calendar
                 val workout = eventDay.workout
 
                 adapter.setDataList(eventDay)
