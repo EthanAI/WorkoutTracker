@@ -16,29 +16,18 @@ internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDe
     constructor() : this(null)
 
     @Throws(IOException::class, JsonProcessingException::class)
-    override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): WorkoutDay {
-        val node = jp.codec.readTree<JsonNode>(jp)
+    override fun deserialize(jsonParser: JsonParser, ctxt: DeserializationContext): WorkoutDay {
+        val node = jsonParser.codec.readTree<JsonNode>(jsonParser)
 
         val workoutNode = node.get("workout")
         val workout = ObjectMapper().treeToValue<Workout>(workoutNode)
 
-        val dayString = node.get("mDay").asLong()
+        val dayString = node.get("day").asLong()
         val day = Calendar.getInstance()
         day.timeInMillis = dayString
 
-        val mDrawable = node.get("mDrawable").asInt()
-        val mIsDisabled = node.get("mIsDisabled").asBoolean()
+        val icon = node.get("icon").asInt()
 
-        // Set private fields in the inherited class EventDay
-        val workoutDay = WorkoutDay(day, workout, mDrawable)
-//        var field = workoutDay::class.java.superclass.getDeclaredField("mDrawable")
-//        field.isAccessible = true
-//        field.setLong(workoutDay, mDrawable)
-
-        val field = workoutDay::class.java.superclass.getDeclaredField("mIsDisabled")
-        field.isAccessible = true
-        field.setBoolean(workoutDay, mIsDisabled)
-
-        return workoutDay
+        return WorkoutDay(workout, day, icon)
     }
 }

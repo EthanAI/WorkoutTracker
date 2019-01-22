@@ -1,23 +1,49 @@
 package com.selfawarelab.workouttracker
 
+import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.Unit.*
 import java.util.*
 
-class WorkoutDay(day: Calendar, val workout: Workout, icon: Int) : EventDay(day, icon) {
-    constructor() : this(Calendar.getInstance(), Workout(), R.drawable.ic_accessibility_black_24dp)
-    constructor(calendar: Calendar) : this(calendar, Workout(), R.drawable.ic_accessibility_black_24dp)
-    constructor(workout: Workout) : this(Calendar.getInstance(), workout, R.drawable.ic_accessibility_black_24dp)
-    constructor(calendar: Calendar, workout: Workout) : this(calendar, workout, R.drawable.ic_accessibility_black_24dp)
+// TODO: make getters and setters to make duplicate fields protected
+class WorkoutDay(val workout: Workout, val day: Calendar, var icon: Int, var isEnabled: Boolean) { // Inheritance sucks
+    var eventDay: EventDay = EventDay(day, icon) // Easier to recreate from scratch than modify via reflection
+
+    constructor() : this(Workout(), Calendar.getInstance(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor(calendar: Calendar) : this(Workout(), calendar, R.drawable.ic_accessibility_black_24dp, true)
+    constructor(workout: Workout) : this(workout, Calendar.getInstance(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor(calendar: Calendar, workout: Workout) : this(workout, calendar, R.drawable.ic_accessibility_black_24dp, true)
+    constructor(workout: Workout, day: Calendar, icon: Int) : this(workout, day, icon, true)
 
     fun addExercise(exercise: Exercise) {
         workout.exerciseList.add(exercise)
+        if(workout.exerciseList.size == 1) {
+            icon = R.drawable.ic_accessibility_black_24dp
+            updateEventDay()
+        }
     }
 
     fun removeExercise(exercise: Exercise) {
         workout.exerciseList.remove(exercise)
+        if(workout.exerciseList.isEmpty()) {
+            icon = R.drawable.navigation_empty_icon
+            updateEventDay()
+        }
+    }
+
+    private fun updateEventDay(day: Calendar = this.day, icon: Int = this.icon) {
+        eventDay = EventDay(day, icon)
     }
 }
+
+fun CalendarView.setEvents(workoutDayList: MutableList<WorkoutDay>) {
+    val calendarData =  workoutDayList.fold(mutableListOf<EventDay>()) { calendarData, workoutDay ->
+        calendarData.add(workoutDay.eventDay)
+        calendarData
+    }
+    this.setEvents(calendarData)
+}
+
 
 fun Calendar.getDateString(): String {
     return "${this.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())} ${this.get(Calendar.DAY_OF_MONTH)}, ${this.get(Calendar.YEAR)}"

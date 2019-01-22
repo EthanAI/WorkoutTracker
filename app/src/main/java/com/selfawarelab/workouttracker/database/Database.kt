@@ -23,7 +23,7 @@ class Database {
         this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
-    private val calendarDataKey = "calendarDataKey"
+    private val workoutDayDataKey = "workoutDayDataKey"
 
     companion object {
         private var instance: Database? = null
@@ -39,19 +39,19 @@ class Database {
         db = DBFactory.open(applicationContext)
     }
 
-    fun clearCalendarData() {
-        db.del(calendarDataKey)
+    fun clearworkoutDayData() {
+        db.del(workoutDayDataKey)
     }
 
-    fun loadCalendarData(): List<WorkoutDay>? {
-        if (!db.exists(calendarDataKey)) return listOf()
+    fun loadworkoutDayData(): List<WorkoutDay>? {
+        if (!db.exists(workoutDayDataKey)) return listOf()
 
-        val calendarDataString = db.get(calendarDataKey)
-        return mapper.readValue(calendarDataString, Array<WorkoutDay>::class.java).toList()
+        val workoutDayDataString = db.get(workoutDayDataKey)
+        return mapper.readValue(workoutDayDataString, Array<WorkoutDay>::class.java).toList()
     }
 
-    fun storeCalendarData(calendarData: List<EventDay>) {
-        val workoutListString = mapper.writeValueAsString(calendarData)
-        db.put(calendarDataKey, workoutListString)
+    fun storeworkoutDayData(workoutDayData: List<WorkoutDay>) {
+        val workoutListString = mapper.writeValueAsString(workoutDayData)
+        db.put(workoutDayDataKey, workoutListString)
     }
 }

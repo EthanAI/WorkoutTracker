@@ -1,28 +1,36 @@
 package com.selfawarelab.workouttracker
 
 import android.arch.lifecycle.ViewModel
-import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.database.Database
 import java.util.*
 
 class MainViewModel : ViewModel() {
-    val calendarData = mutableListOf<EventDay>()
+    val workoutDayList = mutableListOf<WorkoutDay>()
 
     fun addWorkoutDay(workoutDay: WorkoutDay) {
-        calendarData.add(workoutDay)
-        Database.instance().storeCalendarData(calendarData.toList() as List<WorkoutDay>)
+        val existingWorkoutDay = findExistingWorkoutDayByDate(workoutDay.day.timeInMillis)
+        if(existingWorkoutDay == null) {
+            workoutDayList.add(workoutDay)
+            Database.instance().storeworkoutDayData(workoutDayList.toList())
+        }
     }
 
     fun loadWorkoutListFromDb() {
-        calendarData.clear()
-        calendarData.addAll(Database.instance().loadCalendarData()?.toMutableList()!!)
+        workoutDayList.clear()
+        workoutDayList.addAll(Database.instance().loadworkoutDayData()?.toMutableList()!!)
     }
 
-    fun getWorkoutDay(timeInMills: Long): WorkoutDay {
+    private fun findExistingWorkoutDayByDate(timeInMills: Long): WorkoutDay? {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timeInMills
 
-        val foundWorkoutDay = calendarData.find { it.calendar == calendar } ?: return WorkoutDay(calendar)
-        return foundWorkoutDay as WorkoutDay
+        return workoutDayList.find { it.eventDay.calendar == calendar }
+    }
+
+    fun getWorkoutDayForDate(timeInMills: Long): WorkoutDay {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeInMills
+
+        return findExistingWorkoutDayByDate(timeInMills) ?: WorkoutDay(calendar)
     }
 }

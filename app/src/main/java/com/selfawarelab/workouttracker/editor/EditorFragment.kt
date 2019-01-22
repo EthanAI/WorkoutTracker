@@ -17,7 +17,7 @@ import timber.log.Timber
 import java.util.*
 
 class EditorFragment : Fragment() {
-    private val exerciseSuggestionList = Database.instance().loadCalendarData()?.toMutableList()!!
+    private val exerciseSuggestionList = Database.instance().loadworkoutDayData()?.toMutableList()!!
     private lateinit var workoutDay: WorkoutDay
     private val suggestionAdapter = SuggestionAdapter()
     private val editorAdapter = EditorAdapter()
@@ -33,40 +33,40 @@ class EditorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        workoutDay = viewModel.getWorkoutDay(EditorFragmentArgs.fromBundle(arguments!!).calendarMills)
+        workoutDay = viewModel.getWorkoutDayForDate(EditorFragmentArgs.fromBundle(arguments!!).calendarMills)
 
         dateDisplay.let {
-            it.text = workoutDay.calendar.getDateString()
+            it.text = workoutDay.day.getDateString()
             it.setOnClickListener {
                 DatePickerDialog(
                     requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                         val calendar = Calendar.getInstance()
                         calendar.set(year, month, dayOfMonth)
-                        workoutDay = viewModel.getWorkoutDay(calendar.timeInMillis)
+                        workoutDay = viewModel.getWorkoutDayForDate(calendar.timeInMillis)
 
-                        dateDisplay.text = workoutDay.calendar.getDateString()
-                        Timber.e(workoutDay.calendar.getDateString())
+                        dateDisplay.text = workoutDay.day.getDateString()
+                        Timber.e(workoutDay.day.getDateString())
                     },
-                    workoutDay.calendar.get(Calendar.YEAR),
-                    workoutDay.calendar.get(Calendar.MONTH),
-                    workoutDay.calendar.get(Calendar.DAY_OF_MONTH)
+                    workoutDay.day.get(Calendar.YEAR),
+                    workoutDay.day.get(Calendar.MONTH),
+                    workoutDay.day.get(Calendar.DAY_OF_MONTH)
                 )
                     .show()
             }
         }
 
         dateDisplay.let {
-            it.text = workoutDay.calendar.getDateString()
+            it.text = workoutDay.day.getDateString()
             it.setOnClickListener {
                 DatePickerDialog(
                     requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                        workoutDay.calendar.set(year, month, dayOfMonth)
-                        dateDisplay.text = workoutDay.calendar.getDateString()
-                        Timber.e(workoutDay.calendar.getDateString())
+                        workoutDay.day.set(year, month, dayOfMonth)
+                        dateDisplay.text = workoutDay.day.getDateString()
+                        Timber.e(workoutDay.day.getDateString())
                     },
-                    workoutDay.calendar.get(Calendar.YEAR),
-                    workoutDay.calendar.get(Calendar.MONTH),
-                    workoutDay.calendar.get(Calendar.DAY_OF_MONTH)
+                    workoutDay.day.get(Calendar.YEAR),
+                    workoutDay.day.get(Calendar.MONTH),
+                    workoutDay.day.get(Calendar.DAY_OF_MONTH)
                 )
                     .show()
             }

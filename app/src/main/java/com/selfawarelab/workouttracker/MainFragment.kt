@@ -29,60 +29,39 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadWorkoutListFromDb()
-        calendarView.setEvents(viewModel.calendarData)
-        Timber.e("calendarData: ${viewModel.calendarData.size}")
-
         upload.setOnClickListener {
-            Database.instance().clearCalendarData()
+//            Database.instance().clearworkoutDayData()
         }
 
         launchEditorButton.setOnClickListener {
-//            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
-//            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
             val action = MainFragmentDirections.actionMainFragmentToEditorFragment(clickedDay.timeInMillis)
             findNavController().navigate(action)
         }
 
-//        val y1 = Calendar.getInstance()
-//        y1.set(Calendar.DAY_OF_MONTH, 18)
-//
-//        val y2 = Calendar.getInstance()
-//        y2.set(Calendar.DAY_OF_MONTH, 17)
-//
-//        val y3 = Calendar.getInstance()
-//        y3.set(Calendar.DAY_OF_MONTH, 16)
-//
-//        calendarView.setDate(y1)
-//        calendarView.setDisabledDays(listOf(y2))
-//        calendarView.selectedDates = listOf(y3)
-
-
-
         calendarView.setOnDayClickListener { eventDay ->
             clickedDay = eventDay.calendar
 
-            if (eventDay !is WorkoutDay) {
-                Timber.e("Not WorkoutDay")
-                adapter.clearData()
-                adapter.notifyDataSetChanged()
+            val workoutDay = viewModel.getWorkoutDayForDate(clickedDay.timeInMillis)
 
-//                val yesterday = Calendar.getInstance()
-//                yesterday.set(Calendar.DAY_OF_MONTH, 18)
+            adapter.setDataList(workoutDay)
+            adapter.notifyDataSetChanged()
 
-//                calendarView.setDisabledDays(mutableListOf(eventDay.calendar))
-            } else {
-                val workout = eventDay.workout
+            Timber.e(
+                "eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} ${workoutDay.workout}"
+            )
 
-                adapter.setDataList(eventDay)
-                adapter.notifyDataSetChanged()
-
-                Timber.e("eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} $workout"
-                )
-            }
         }
 
         workoutRV.layoutManager = LinearLayoutManager(context)
         workoutRV.adapter = adapter
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.loadWorkoutListFromDb()
+        calendarView.setEvents(viewModel.workoutDayList)
+        Timber.e("workoutDayList: ${viewModel.workoutDayList.size}")
+    }
 }
+

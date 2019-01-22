@@ -47,7 +47,6 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                 // Allow item deletion
                 it.setOnLongClickListener {
                     workoutDay?.removeExercise(exercise)
-//                    workoutDay?.workout?.exerciseList?.removeAt(adapterPosition)
                     notifyDataSetChanged()
                     true
                 }
