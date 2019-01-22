@@ -1,5 +1,6 @@
 package com.selfawarelab.workouttracker.editor
 
+import android.app.DatePickerDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -36,6 +37,23 @@ class EditorFragment : Fragment() {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = calendarMills
         newWorkoutDay = WorkoutDay(calendar, Workout(), R.drawable.ic_accessibility_black_24dp)
+
+        dateDisplay.let {
+            it.text = newWorkoutDay.calendar.getDateString()
+            it.setOnClickListener {
+                DatePickerDialog(
+                    requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                        newWorkoutDay.calendar.set(year, month, dayOfMonth)
+                        dateDisplay.text = newWorkoutDay.calendar.getDateString()
+                        Timber.e(newWorkoutDay.calendar.getDateString())
+                    },
+                    newWorkoutDay.calendar.get(Calendar.YEAR),
+                    newWorkoutDay.calendar.get(Calendar.MONTH),
+                    newWorkoutDay.calendar.get(Calendar.DAY_OF_MONTH)
+                )
+                    .show()
+            }
+        }
 
         addExercise.setOnClickListener {
         }

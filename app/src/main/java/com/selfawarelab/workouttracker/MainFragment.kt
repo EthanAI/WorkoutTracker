@@ -37,8 +37,9 @@ class MainFragment : Fragment() {
         }
 
         launchEditorButton.setOnClickListener {
-            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
-            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
+//            Timber.e("Selected day: ${calendarView.selectedDates[0].get(Calendar.DAY_OF_MONTH)}")
+//            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(calendarView.selectedDates[0].timeInMillis)
+            val action = MainFragmentDirections.actionMainFragmentToEditorFragment(Calendar.getInstance().timeInMillis)
             findNavController().navigate(action)
         }
 
@@ -62,7 +63,7 @@ class MainFragment : Fragment() {
                 Timber.e("Not WorkoutDay")
                 adapter.clearData()
                 adapter.notifyDataSetChanged()
-                
+
 //                val yesterday = Calendar.getInstance()
 //                yesterday.set(Calendar.DAY_OF_MONTH, 18)
 

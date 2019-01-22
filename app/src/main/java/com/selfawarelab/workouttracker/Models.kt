@@ -8,11 +8,13 @@ class WorkoutDay(day: Calendar, val workout: Workout, icon: Int) : EventDay(day,
     constructor() : this(Calendar.getInstance(), Workout(), 0)
     constructor(workout: Workout) : this(Calendar.getInstance(), workout, 0)
     constructor(calendar: Calendar, workout: Workout) : this(calendar, workout, 0)
-
-    fun getDateString(): String {
-        return "${calendar.get(Calendar.YEAR)} ${calendar.get(Calendar.MONTH)} ${calendar.get(Calendar.DAY_OF_MONTH)}"
-    }
 }
+
+
+fun Calendar.getDateString(): String {
+    return "${this.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())} ${this.get(Calendar.DAY_OF_MONTH)}, ${this.get(Calendar.YEAR)}"
+}
+
 
 // TODO: Make val icon part of exercise so multiple icons can stack up per day
 class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
