@@ -55,6 +55,7 @@ fun getTodayStart(): Calendar {
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 0)
     calendar.set(Calendar.MILLISECOND, 0)
+    calendar.set(Calendar.AM_PM, 0)
     return calendar
 }
 

@@ -27,8 +27,8 @@ import java.util.*
 // TODO: Log past workouts (calendar UI)
 // TODO: Time workouts
 // TODO: Public domain diagrams
-// TODO: Delete exercise
 // TODO: +/- Buttons for rep count
+// TODO: Make values editable from MainFragment
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

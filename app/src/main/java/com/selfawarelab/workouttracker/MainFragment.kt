@@ -41,15 +41,7 @@ class MainFragment : Fragment() {
         calendarView.setOnDayClickListener { eventDay ->
             clickedDay = eventDay.calendar
 
-            val workoutDay = viewModel.getWorkoutDayForDate(clickedDay.timeInMillis)
-
-            adapter.setDataList(workoutDay)
-            adapter.notifyDataSetChanged()
-
-            Timber.e(
-                "eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} ${workoutDay.workout}"
-            )
-
+            updateList()
         }
 
         workoutRV.layoutManager = LinearLayoutManager(context)
@@ -62,6 +54,14 @@ class MainFragment : Fragment() {
         viewModel.loadWorkoutListFromDb()
         calendarView.setEvents(viewModel.workoutDayList)
         Timber.e("workoutDayList: ${viewModel.workoutDayList.size}")
+    }
+
+    private fun updateList() {
+        val workoutDay = viewModel.getWorkoutDayForDate(clickedDay.timeInMillis)
+        adapter.setDataList(workoutDay)
+        adapter.notifyDataSetChanged()
+
+        Timber.e("eventDay ${clickedDay.get(Calendar.YEAR)} ${clickedDay.get(Calendar.MONTH)} ${clickedDay.get(Calendar.DAY_OF_MONTH)} }")
     }
 }
 

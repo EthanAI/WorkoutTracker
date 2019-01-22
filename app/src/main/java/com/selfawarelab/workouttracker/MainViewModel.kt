@@ -9,10 +9,10 @@ class MainViewModel : ViewModel() {
 
     fun addWorkoutDay(workoutDay: WorkoutDay) {
         val existingWorkoutDay = findExistingWorkoutDayByDate(workoutDay.day.timeInMillis)
-        if(existingWorkoutDay == null) {
+        if (existingWorkoutDay == null) {
             workoutDayList.add(workoutDay)
-            Database.instance().storeworkoutDayData(workoutDayList.toList())
         }
+        Database.instance().storeworkoutDayData(workoutDayList.toList()) // Write possible changes even if quantity is unchanged
     }
 
     fun loadWorkoutListFromDb() {
