@@ -55,6 +55,23 @@ class EditorFragment : Fragment() {
             }
         }
 
+        dateDisplay.let {
+            it.text = workoutDay.calendar.getDateString()
+            it.setOnClickListener {
+                DatePickerDialog(
+                    requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                        workoutDay.calendar.set(year, month, dayOfMonth)
+                        dateDisplay.text = workoutDay.calendar.getDateString()
+                        Timber.e(workoutDay.calendar.getDateString())
+                    },
+                    workoutDay.calendar.get(Calendar.YEAR),
+                    workoutDay.calendar.get(Calendar.MONTH),
+                    workoutDay.calendar.get(Calendar.DAY_OF_MONTH)
+                )
+                    .show()
+            }
+        }
+
         addExercise.setOnClickListener {
         }
 

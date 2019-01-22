@@ -13,12 +13,11 @@ class WorkoutDay(day: Calendar, val workout: Workout, icon: Int) : EventDay(day,
     fun addExercise(exercise: Exercise) {
         workout.exerciseList.add(exercise)
     }
-    
+
     fun removeExercise(exercise: Exercise) {
         workout.exerciseList.remove(exercise)
     }
 }
-
 
 fun Calendar.getDateString(): String {
     return "${this.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())} ${this.get(Calendar.DAY_OF_MONTH)}, ${this.get(Calendar.YEAR)}"
