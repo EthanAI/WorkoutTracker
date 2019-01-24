@@ -74,6 +74,12 @@ class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps
     constructor(name: String, weight: Int, unit: Unit, vararg reps: Int) : this(name, weight, unit, Reps(*reps))
     constructor(): this("", 0, LBS, Reps())
 
+    companion object {
+        fun getPlaceholder(): Exercise {
+            return Exercise("Exercise Name", 50, LBS, 10, 10, 10)
+        }
+    }
+
     override fun toString(): String {
         return "$name $weight $unit $reps"
     }
