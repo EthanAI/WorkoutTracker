@@ -40,27 +40,11 @@ class EditorFragment : Fragment() {
             it.setOnClickListener {
                 DatePickerDialog(
                     requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                        val calendar = Calendar.getInstance()
+                        val calendar = getTodayStart()
                         calendar.set(year, month, dayOfMonth)
                         workoutDay = viewModel.getWorkoutDayForDate(calendar.timeInMillis)
+                        updateAddingUI()
 
-                        dateDisplay.text = workoutDay.day.getDateString()
-                        Timber.e(workoutDay.day.getDateString())
-                    },
-                    workoutDay.day.get(Calendar.YEAR),
-                    workoutDay.day.get(Calendar.MONTH),
-                    workoutDay.day.get(Calendar.DAY_OF_MONTH)
-                )
-                    .show()
-            }
-        }
-
-        dateDisplay.let {
-            it.text = workoutDay.day.getDateString()
-            it.setOnClickListener {
-                DatePickerDialog(
-                    requireContext(), DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                        workoutDay.day.set(year, month, dayOfMonth)
                         dateDisplay.text = workoutDay.day.getDateString()
                         Timber.e(workoutDay.day.getDateString())
                     },
@@ -86,9 +70,7 @@ class EditorFragment : Fragment() {
         suggestionAdapter.setDataList(exerciseSuggestionList)
 
 
-        addingRV.layoutManager = LinearLayoutManager(context)
-        addingRV.adapter = editorAdapter
-        editorAdapter.setDataList(workoutDay)
+        updateAddingUI()
 
         suggestionAdapter.onClickSubject.subscribeBy(
             onNext = { exercise: Exercise ->
@@ -97,5 +79,12 @@ class EditorFragment : Fragment() {
                 Timber.e(workoutDay.workout.toString())
             }
         )
+    }
+
+    private fun updateAddingUI() {
+        addingRV.layoutManager = LinearLayoutManager(context)
+        addingRV.adapter = editorAdapter
+        editorAdapter.setDataList(workoutDay)
+        editorAdapter.notifyDataSetChanged()
     }
 }

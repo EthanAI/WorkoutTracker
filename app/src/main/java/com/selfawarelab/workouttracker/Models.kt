@@ -9,9 +9,9 @@ import java.util.*
 class WorkoutDay(val workout: Workout, val day: Calendar, var icon: Int, var isEnabled: Boolean) { // Inheritance sucks
     var eventDay: EventDay = EventDay(day, icon) // Easier to recreate from scratch than modify via reflection
 
-    constructor() : this(Workout(), Calendar.getInstance(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor() : this(Workout(), getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
     constructor(calendar: Calendar) : this(Workout(), calendar, R.drawable.ic_accessibility_black_24dp, true)
-    constructor(workout: Workout) : this(workout, Calendar.getInstance(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor(workout: Workout) : this(workout, getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
     constructor(calendar: Calendar, workout: Workout) : this(workout, calendar, R.drawable.ic_accessibility_black_24dp, true)
     constructor(workout: Workout, day: Calendar, icon: Int) : this(workout, day, icon, true)
 

@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             val initialData = mutableListOf<WorkoutDay>()
 
             val exerciseSuggestionList = getInitialExerciseSuggestionList()
-            val ancientDay = Calendar.getInstance()
+            val ancientDay = getTodayStart()
             ancientDay.timeInMillis = 0
             val workout = Workout(exerciseSuggestionList)
             val workoutDay = WorkoutDay(ancientDay, workout)

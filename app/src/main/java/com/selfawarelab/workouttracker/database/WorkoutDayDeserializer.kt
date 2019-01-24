@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import com.selfawarelab.workouttracker.Workout
 import com.selfawarelab.workouttracker.WorkoutDay
+import com.selfawarelab.workouttracker.getTodayStart
 import java.io.IOException
 import java.util.*
 
@@ -23,7 +24,7 @@ internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDe
         val workout = ObjectMapper().treeToValue<Workout>(workoutNode)
 
         val dayString = node.get("day").asLong()
-        val day = Calendar.getInstance()
+        val day = getTodayStart()
         day.timeInMillis = dayString
 
         val icon = node.get("icon").asInt()

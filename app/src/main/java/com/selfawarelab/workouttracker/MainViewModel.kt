@@ -21,14 +21,14 @@ class MainViewModel : ViewModel() {
     }
 
     private fun findExistingWorkoutDayByDate(timeInMills: Long): WorkoutDay? {
-        val calendar = Calendar.getInstance()
+        val calendar = getTodayStart()
         calendar.timeInMillis = timeInMills
 
         return workoutDayList.find { it.eventDay.calendar == calendar }
     }
 
     fun getWorkoutDayForDate(timeInMills: Long): WorkoutDay {
-        val calendar = Calendar.getInstance()
+        val calendar = getTodayStart()
         calendar.timeInMillis = timeInMills
 
         return findExistingWorkoutDayByDate(timeInMills) ?: WorkoutDay(calendar)
