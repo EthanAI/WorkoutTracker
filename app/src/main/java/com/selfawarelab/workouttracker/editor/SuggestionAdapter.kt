@@ -11,8 +11,8 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.item_workoutday.view.*
 
 // TODO: Maybe have it go by entire Workout. Then you can copy a bunch over and modify. Whichever is the least amount of corrections required
-class SuggestionAdapter() : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder>() {
-    var data: List<Exercise>? = null
+class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder>() {
+    private var data: List<Exercise>? = null
     val onClickSubject: PublishSubject<Exercise> = PublishSubject.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
@@ -21,13 +21,30 @@ class SuggestionAdapter() : RecyclerView.Adapter<SuggestionAdapter.SuggestionVie
     }
 
     fun setDataList(dataSource: MutableList<WorkoutDay>) {
-        data = dataSource.fold(mutableListOf()) { list: MutableList<Exercise>, workoutDay ->
-            list.addAll( workoutDay.workout.exerciseList)
-            list }
+        data = getUniqueRecentExercises(dataSource)
+    }
+
+    private fun getUniqueRecentExercises(dataSource: MutableList<WorkoutDay>): List<Exercise>? {
+        dataSource.reverse() // Recent first
+        // get all the exercises
+        val exerciseList = dataSource
+            .fold(mutableListOf()) { list: MutableList<Exercise>, workoutDay ->
+                list.addAll(workoutDay.workout.exerciseList)
+                list
+            }
+        // Collect only the most recent instance of each exercise
+        val exerciseMap = exerciseList
+            .fold(HashMap()) { hashMap: HashMap<String, Exercise>, exercise ->
+                if (!hashMap.containsKey(exercise.name))
+                    hashMap[exercise.name] = exercise
+                hashMap
+            }
+        // Sort alphabetically
+        return exerciseMap.values.toList().sortedBy { it.name }
     }
 
     override fun getItemCount(): Int {
-        return if(data == null) 0
+        return if (data == null) 0
         else data!!.size
     }
 
