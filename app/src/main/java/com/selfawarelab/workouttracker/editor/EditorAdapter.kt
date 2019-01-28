@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.selfawarelab.workouttracker.Exercise
 import com.selfawarelab.workouttracker.R
@@ -42,10 +43,18 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                 itemView.reps.text = exercise.reps.toString()
 
                 // Allow item deletion
-                itemView.setOnLongClickListener {
-                    workoutDay?.removeExercise(exercise)
-                    notifyDataSetChanged()
-                    true
+                itemView.delete_button.visibility = VISIBLE
+                itemView.delete_button.setOnClickListener { view ->
+                    android.app.AlertDialog.Builder(view.context)
+                        .setTitle("Delete Exercise?")
+                        .setMessage(exercise.toString())
+                        .setPositiveButton("Delete") { dialog, _ ->
+                            workoutDay?.removeExercise(exercise)
+                            notifyDataSetChanged()
+                            dialog.cancel()
+                        }
+                        .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+                        .show()
                 }
 
                 itemView.name.setOnClickListener { view ->
