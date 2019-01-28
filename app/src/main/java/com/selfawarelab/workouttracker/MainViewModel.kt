@@ -2,7 +2,6 @@ package com.selfawarelab.workouttracker
 
 import android.arch.lifecycle.ViewModel
 import com.selfawarelab.workouttracker.database.Database
-import java.util.*
 
 class MainViewModel : ViewModel() {
     val workoutDayList = mutableListOf<WorkoutDay>()
@@ -12,12 +11,12 @@ class MainViewModel : ViewModel() {
         if (existingWorkoutDay == null) {
             workoutDayList.add(workoutDay)
         }
-        Database.instance().storeworkoutDayData(workoutDayList.toList()) // Write possible changes even if quantity is unchanged
+        Database.instance().storeWorkoutDayData(workoutDayList.toList()) // Write possible changes even if quantity is unchanged
     }
 
     fun loadWorkoutListFromDb() {
         workoutDayList.clear()
-        workoutDayList.addAll(Database.instance().loadworkoutDayData()?.toMutableList()!!)
+        workoutDayList.addAll(Database.instance().loadWorkoutDayData()?.toMutableList()!!)
     }
 
     private fun findExistingWorkoutDayByDate(timeInMills: Long): WorkoutDay? {

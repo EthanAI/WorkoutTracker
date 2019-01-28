@@ -30,7 +30,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         upload.setOnClickListener {
-//            Database.instance().clearworkoutDayData()
+//            Database.instance().clearWorkoutDayData()
         }
 
         launchEditorButton.setOnClickListener {

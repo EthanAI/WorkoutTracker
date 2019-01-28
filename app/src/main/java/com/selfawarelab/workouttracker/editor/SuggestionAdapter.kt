@@ -34,13 +34,13 @@ class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewH
             }
         // Collect only the most recent instance of each exercise
         val exerciseMap = exerciseList
-            .fold(HashMap()) { hashMap: HashMap<String, Exercise>, exercise ->
-                if (!hashMap.containsKey(exercise.name))
-                    hashMap[exercise.name] = exercise
+            .fold(HashMap()) { hashMap: HashMap<Int, Exercise>, exercise ->
+                if (!hashMap.containsKey(exercise.type.id))
+                    hashMap[exercise.type.id] = exercise
                 hashMap
             }
         // Sort alphabetically
-        return exerciseMap.values.toList().sortedBy { it.name }
+        return exerciseMap.values.toList().sortedBy { it.type.name }
     }
 
     override fun getItemCount(): Int {
@@ -56,7 +56,7 @@ class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewH
     inner class SuggestionViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         fun bindData(exercise: Exercise) {
             itemView.let {
-                it.name.text = exercise.name
+                it.name.text = exercise.type.name
                 it.weight.text = exercise.weight.toString()
                 it.unit.text = exercise.unit.string
                 it.reps.text = exercise.reps.toString()

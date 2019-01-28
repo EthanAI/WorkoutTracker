@@ -7,9 +7,10 @@ import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.selfawarelab.workouttracker.Exercise
+import com.selfawarelab.workouttracker.ExerciseType
 import com.selfawarelab.workouttracker.R
 import com.selfawarelab.workouttracker.WorkoutDay
-import kotlinx.android.synthetic.main.exercise_name_dialog.*
+import kotlinx.android.synthetic.main.exercise_type_dialog.*
 import kotlinx.android.synthetic.main.item_exercise.view.*
 
 class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
@@ -37,7 +38,7 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
     inner class EditorViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         fun bindData(exercise: Exercise) {
             itemView.let { itemView ->
-                itemView.name.text = exercise.name
+                itemView.name.text = exercise.type.name
                 itemView.weight.text = exercise.weight.toString()
                 itemView.unit.text = exercise.unit.string
                 itemView.reps.text = exercise.reps.toString()
@@ -60,17 +61,40 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                 itemView.name.setOnClickListener { view ->
                     val dialog = Dialog(view.context)
                     dialog.let { it ->
-                        it.setContentView(R.layout.exercise_name_dialog)
-                        it.setTitle("Exercise Name")
-                        it.name_edit_text.append(exercise.name)
-                        it.name_edit_text.requestFocus()
+                        val muscleGroupList = exercise.type.muscles.toMutableList()
 
-                        it.saveName.setOnClickListener { _ ->
-                            exercise.name = it.name_edit_text.text.toString()
+                        it.setContentView(R.layout.exercise_type_dialog)
+                        it.setTitle("Exercise Type")
+                        it.name_edit_text.append(exercise.type.name)
+                        it.name_edit_text.requestFocus()
+                        it.muscle_list.text = muscleGroupList.fold("") {output, input ->
+                            output.plus(input.name + "\n")
+                        }
+
+                        // TODO: Select Muscle type(s)
+                        it.muscle_picker.apply {
+                            val muscleGroups = ExerciseType.MuscleGroup.values()
+                            this.displayedValues = muscleGroups.map { muscleGroup -> muscleGroup.name }.toTypedArray()
+                            this.minValue = 0
+                            this.maxValue = muscleGroups.size - 1
+                            this.wrapSelectorWheel = false
+                        }
+
+                        it.add_type.setOnClickListener { _ ->
+                            val selectedMuscleGroup = ExerciseType.MuscleGroup.values()[it.muscle_picker.value]
+                            muscleGroupList.add(selectedMuscleGroup)
+                            it.muscle_list.text = muscleGroupList.fold("") {output, input ->
+                                output.plus(input.name + "\n")
+                            }
+                        }
+
+                        it.saveType.setOnClickListener { _ ->
+                            val exerciseType = ExerciseType(it.name_edit_text.text.toString(), *muscleGroupList.toTypedArray(), extraOffset = true)
+                            exercise.type = exerciseType
                             this@EditorAdapter.notifyDataSetChanged()
                             it.dismiss()
                         }
-                        it.cancelName.setOnClickListener { _ ->
+                        it.cancelType.setOnClickListener { _ ->
                             it.cancel()
                         }
 

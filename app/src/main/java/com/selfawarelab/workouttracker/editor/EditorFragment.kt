@@ -17,7 +17,7 @@ import timber.log.Timber
 import java.util.*
 
 class EditorFragment : Fragment() {
-    private val exerciseSuggestionList = Database.instance().loadworkoutDayData()?.toMutableList()!!
+    private val exerciseSuggestionList = Database.instance().loadWorkoutDayData()?.toMutableList()!!
     private lateinit var workoutDay: WorkoutDay
     private val suggestionAdapter = SuggestionAdapter()
     private val editorAdapter = EditorAdapter()

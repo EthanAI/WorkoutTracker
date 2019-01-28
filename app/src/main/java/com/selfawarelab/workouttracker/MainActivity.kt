@@ -3,10 +3,8 @@ package com.selfawarelab.workouttracker
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.selfawarelab.workouttracker.database.Database
 import timber.log.Timber
-import java.util.*
 
 /*
     Icons: Exercise categories:
@@ -28,7 +26,6 @@ import java.util.*
 // TODO: Time workouts
 // TODO: Public domain diagrams
 // TODO: +/- Buttons for rep count
-// TODO: Make values editable from MainFragment
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
         Database.instance().initDatabase(applicationContext)
-
+//        Database.instance().clearWorkoutDayData()
         addExerciseSuggestionsIfNone()
     }
 
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addExerciseSuggestionsIfNone() {
         // A little hacky to make a dated object and hide it in the past, but works for now
-        val workoutDayList = Database.instance().loadworkoutDayData()
+        val workoutDayList = Database.instance().loadWorkoutDayData()
         if (workoutDayList == null || workoutDayList.isEmpty() || workoutDayList[0].workout.exerciseList.isEmpty()) {
             val initialData = mutableListOf<WorkoutDay>()
 
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
             initialData.add(workoutDay)
 
-            Database.instance().storeworkoutDayData(initialData)
+            Database.instance().storeWorkoutDayData(initialData)
         }
     }
 }

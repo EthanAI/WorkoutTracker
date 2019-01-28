@@ -39,18 +39,18 @@ class Database {
         db = DBFactory.open(applicationContext)
     }
 
-    fun clearworkoutDayData() {
+    fun clearWorkoutDayData() {
         db.del(workoutDayDataKey)
     }
 
-    fun loadworkoutDayData(): List<WorkoutDay>? {
+    fun loadWorkoutDayData(): List<WorkoutDay>? {
         if (!db.exists(workoutDayDataKey)) return listOf()
 
         val workoutDayDataString = db.get(workoutDayDataKey)
         return mapper.readValue(workoutDayDataString, Array<WorkoutDay>::class.java).toList()
     }
 
-    fun storeworkoutDayData(workoutDayData: List<WorkoutDay>) {
+    fun storeWorkoutDayData(workoutDayData: List<WorkoutDay>) {
         val workoutListString = mapper.writeValueAsString(workoutDayData)
         db.put(workoutDayDataKey, workoutListString)
     }

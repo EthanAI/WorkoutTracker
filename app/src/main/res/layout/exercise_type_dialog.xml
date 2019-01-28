@@ -1,0 +1,70 @@
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="400dp"
+        android:layout_height="400dp">
+
+    <EditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/muscle_picker"
+    />
+
+    <TextView
+            android:id="@+id/muscle_list"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="NONE"
+            app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/muscle_picker"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/cancelType"/>
+
+    <NumberPicker
+            android:id="@+id/muscle_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/name_edit_text"
+            app:layout_constraintEnd_toStartOf="@id/add_type"
+    />
+
+    <Button
+            android:id="@+id/add_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Muscle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/saveType"/>
+
+    <Button
+            android:id="@+id/cancelType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:padding="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@id/saveType"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+    />
+
+    <Button
+            android:id="@+id/saveType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toEndOf="@id/cancelType"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+</android.support.constraint.ConstraintLayout>
