@@ -9,13 +9,13 @@ import com.selfawarelab.workouttracker.Exercise
 import com.selfawarelab.workouttracker.R
 import com.selfawarelab.workouttracker.WorkoutDay
 import kotlinx.android.synthetic.main.exercise_name_dialog.*
-import kotlinx.android.synthetic.main.item_workoutday.view.*
+import kotlinx.android.synthetic.main.item_exercise.view.*
 
 class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
     var workoutDay: WorkoutDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditorViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_editor, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_exercise, parent, false)
         return EditorViewHolder(view)
     }
 
@@ -54,6 +54,8 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                         it.setContentView(R.layout.exercise_name_dialog)
                         it.setTitle("Exercise Name")
                         it.name_edit_text.append(exercise.name)
+                        it.name_edit_text.requestFocus()
+
                         it.saveName.setOnClickListener { _ ->
                             exercise.name = it.name_edit_text.text.toString()
                             this@EditorAdapter.notifyDataSetChanged()

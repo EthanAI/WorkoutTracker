@@ -1,17 +1,16 @@
 package com.selfawarelab.workouttracker
 
 import android.support.v7.widget.RecyclerView
-import android.system.Os.bind
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_workoutday.view.*
+import kotlinx.android.synthetic.main.item_exercise.view.*
 
 class WorkoutAdapter() : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
     var data: WorkoutDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_workoutday, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_exercise, parent, false)
         return WorkoutViewHolder(view)
     }
 

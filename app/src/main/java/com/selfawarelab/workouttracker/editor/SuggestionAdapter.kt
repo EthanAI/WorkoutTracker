@@ -8,7 +8,7 @@ import com.selfawarelab.workouttracker.Exercise
 import com.selfawarelab.workouttracker.R
 import com.selfawarelab.workouttracker.WorkoutDay
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.item_workoutday.view.*
+import kotlinx.android.synthetic.main.item_exercise.view.*
 
 // TODO: Maybe have it go by entire Workout. Then you can copy a bunch over and modify. Whichever is the least amount of corrections required
 class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder>() {
@@ -16,7 +16,7 @@ class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewH
     val onClickSubject: PublishSubject<Exercise> = PublishSubject.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_workoutday, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_exercise, parent, false)
         return SuggestionViewHolder(view)
     }
 
