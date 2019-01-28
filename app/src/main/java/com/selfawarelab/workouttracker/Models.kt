@@ -70,7 +70,7 @@ class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
     }
 }
 
-class Exercise(val name: String, var weight: Int, val unit: Unit, var reps: Reps) {
+class Exercise(var name: String, var weight: Int, var unit: Unit, var reps: Reps) {
     constructor(name: String, weight: Int, unit: Unit, vararg reps: Int) : this(name, weight, unit, Reps(*reps))
     constructor(): this("", 0, LBS, Reps())
 

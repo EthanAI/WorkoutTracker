@@ -1,7 +1,6 @@
 package com.selfawarelab.workouttracker.editor
 
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.selfawarelab.workouttracker.*
 import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.exercise_creator_dialog.*
 import kotlinx.android.synthetic.main.fragment_add.*
 import timber.log.Timber
 import java.util.*
@@ -60,36 +58,8 @@ class EditorFragment : Fragment() {
         }
 
         addExercise.setOnClickListener { _ ->
-            val newExercise = Exercise.getPlaceholder()
-            val dialog = Dialog(view.context)
-            dialog.let {
-                it.setContentView(R.layout.exercise_creator_dialog)
-                it.setTitle("Weight")
-
-                it.name.setText(newExercise.name)
-                it.weight.text = newExercise.weight.toString()
-                it.unit.text = newExercise.unit.string
-                it.reps.text = newExercise.reps.toString()
-
-                val weightClickListener = getWeightOnClickListener(newExercise, editorAdapter)
-                it.weight.setOnClickListener(weightClickListener)
-                it.unit.setOnClickListener(weightClickListener)
-
-                val repsClickListener = getRepsOnClickListener(newExercise, editorAdapter)
-                it.reps.setOnClickListener(repsClickListener)
-
-                it.save.setOnClickListener {
-                    workoutDay.addExercise(newExercise)
-                    editorAdapter.notifyDataSetChanged()
-                    dialog.dismiss()
-                }
-
-                it.cancel.setOnClickListener {
-                    dialog.cancel()
-                }
-            }
-
-            dialog.show()
+            workoutDay.addExercise(Exercise.getPlaceholder())
+            editorAdapter.notifyDataSetChanged()
         }
 
         submit.setOnClickListener {
