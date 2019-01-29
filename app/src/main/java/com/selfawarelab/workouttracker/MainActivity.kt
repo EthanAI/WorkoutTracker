@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import com.selfawarelab.workouttracker.database.Database
+import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
+import java.util.*
 
 /*
     Icons: Exercise categories:
@@ -34,6 +36,18 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
         Database.instance().initDatabase(applicationContext)
 //        Database.instance().clearWorkoutDayData()
+
+        Api.api.addWorkoutDay(WorkoutDayRequest())
+            .subscribeBy(
+                onSuccess = {
+                    Timber.e("Success")
+                },
+                onError = {
+                    Timber.e("Error")
+                })
+
+
+
         addExerciseSuggestionsIfNone()
     }
 
@@ -42,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     private fun addExerciseSuggestionsIfNone() {
         // A little hacky to make a dated object and hide it in the past, but works for now
         val workoutDayList = Database.instance().loadWorkoutDayData()
-        if (workoutDayList == null || workoutDayList.isEmpty() || workoutDayList[0].workout.exerciseList.isEmpty()) {
+        if (workoutDayList.isEmpty() || workoutDayList[0].workout.exerciseList.isEmpty()) {
             val initialData = mutableListOf<WorkoutDay>()
 
             val exerciseSuggestionList = getInitialExerciseSuggestionList()

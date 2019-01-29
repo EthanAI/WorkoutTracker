@@ -37,7 +37,13 @@ class AwsTableResponse<T>(@SerializedName("Items") val list: List<T>)
 
 class WorkoutDayRequest(
     @SerializedName("TableName") val tableName: String = "lambda-dynamodb-stream",
-    @SerializedName("Item") val item: Item = Item("89")
+    @SerializedName("Item") val item: Item = Item("44")
 )
 
-class Item(val id: String)
+class Item(val id: String) {
+    val mg: List<ExerciseType.MuscleGroup> = mutableListOf<ExerciseType.MuscleGroup>().apply {
+        this.add(ExerciseType.MuscleGroup.BICEPS)
+        this.add(ExerciseType.MuscleGroup.TRICEPS)
+    }
+}
+
