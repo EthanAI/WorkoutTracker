@@ -5,7 +5,13 @@ import com.selfawarelab.workouttracker.database.Database
 
 class MainViewModel : ViewModel() {
     val workoutDayList = mutableListOf<WorkoutDay>()
+    val recoveryDays = HashMap<ExerciseType.MuscleGroup, Int>().apply {
+        for(muscle in ExerciseType.MuscleGroup.values()) {
+            this[muscle] = 0
+        }
+    }
 
+    // TODO: get current date and update recoveryDays to be from this day
     fun addWorkoutDay(workoutDay: WorkoutDay) {
         val existingWorkoutDay = findExistingWorkoutDayByDate(workoutDay.day.timeInMillis)
         if (existingWorkoutDay == null) {
@@ -16,7 +22,7 @@ class MainViewModel : ViewModel() {
 
     fun loadWorkoutListFromDb() {
         workoutDayList.clear()
-        workoutDayList.addAll(Database.instance().loadWorkoutDayData()?.toMutableList()!!)
+        workoutDayList.addAll(Database.instance().loadWorkoutDayData().toMutableList())
     }
 
     private fun findExistingWorkoutDayByDate(timeInMills: Long): WorkoutDay? {

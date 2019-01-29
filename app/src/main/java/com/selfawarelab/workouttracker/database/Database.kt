@@ -24,6 +24,7 @@ class Database {
     }
 
     private val workoutDayDataKey = "workoutDayDataKey"
+    private val exerciseTypesDataKey = "exerciseTypesDataKey"
 
     companion object {
         private var instance: Database? = null
@@ -43,7 +44,7 @@ class Database {
         db.del(workoutDayDataKey)
     }
 
-    fun loadWorkoutDayData(): List<WorkoutDay>? {
+    fun loadWorkoutDayData(): List<WorkoutDay> {
         if (!db.exists(workoutDayDataKey)) return listOf()
 
         val workoutDayDataString = db.get(workoutDayDataKey)
@@ -53,5 +54,17 @@ class Database {
     fun storeWorkoutDayData(workoutDayData: List<WorkoutDay>) {
         val workoutListString = mapper.writeValueAsString(workoutDayData)
         db.put(workoutDayDataKey, workoutListString)
+    }
+
+    fun loadExerciseTypes(): List<ExerciseType> {
+        if (!db.exists(exerciseTypesDataKey)) return listOf()
+
+        val jsonString = db.get(exerciseTypesDataKey)
+        return mapper.readValue(jsonString, Array<ExerciseType>::class.java).toList()
+    }
+
+    fun storeExerciseTypes(exerciseTypeList: List<ExerciseType>) {
+        val jsonString = mapper.writeValueAsString(exerciseTypeList)
+        db.put(exerciseTypesDataKey, jsonString)
     }
 }
