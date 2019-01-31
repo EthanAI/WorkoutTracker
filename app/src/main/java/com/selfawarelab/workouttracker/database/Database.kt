@@ -2,9 +2,11 @@ package com.selfawarelab.workouttracker.database
 
 import android.content.Context
 import com.applandeo.materialcalendarview.EventDay
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.google.gson.reflect.TypeToken
 import com.selfawarelab.workouttracker.*
 import com.snappydb.DB
 import com.snappydb.DBFactory
@@ -25,6 +27,7 @@ class Database {
 
     private val workoutDayDataKey = "workoutDayDataKey"
     private val exerciseTypesDataKey = "exerciseTypesDataKey"
+    private val targetRestDayKey = "targetRestDayKey"
 
     companion object {
         private var instance: Database? = null
@@ -66,5 +69,18 @@ class Database {
     fun storeExerciseTypes(exerciseTypeList: List<ExerciseType>) {
         val jsonString = mapper.writeValueAsString(exerciseTypeList)
         db.put(exerciseTypesDataKey, jsonString)
+    }
+
+    fun loadTargetRestData(): Map<ExerciseType.MuscleGroup, Int> {
+        if (!db.exists(targetRestDayKey)) return hashMapOf()
+
+        val jsonString = db.get(targetRestDayKey)
+        val type = object : TypeReference<java.util.HashMap<ExerciseType.MuscleGroup, Int>>() {} // TODO: Figure out this object: thing
+        return mapper.readValue(jsonString, type)
+    }
+
+    fun storeTargetRestData(map: HashMap<ExerciseType.MuscleGroup, Int>) {
+        val jsonString = mapper.writeValueAsString(map)
+        db.put(targetRestDayKey, jsonString)
     }
 }

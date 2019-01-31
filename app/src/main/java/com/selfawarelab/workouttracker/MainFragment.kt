@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.selfawarelab.workouttracker.database.Database
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import java.util.*
@@ -29,8 +28,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        upload.setOnClickListener {
-//            Database.instance().clearWorkoutDayData()
+        rest.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_restFragment)
         }
 
         launchEditorButton.setOnClickListener {
@@ -52,6 +51,7 @@ class MainFragment : Fragment() {
         super.onResume()
 
         viewModel.loadWorkoutListFromDb()
+        viewModel.loadTargetRestDataFromDb()
         calendarView.setEvents(viewModel.workoutDayList)
         Timber.e("workoutDayList: ${viewModel.workoutDayList.size}")
     }

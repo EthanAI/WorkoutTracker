@@ -6,7 +6,6 @@ import androidx.navigation.Navigation.findNavController
 import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
-import java.util.*
 
 /*
     Icons: Exercise categories:
@@ -19,7 +18,6 @@ import java.util.*
  */
 // TODO: multiple icons per day
 // TODO: icons kept in Exercise object
-// TODO: Exercise adder fragment
 // TODO: Backup to cloud
 // TODO: Possible weight changes per set
 // TODO: Total / streak counter
@@ -37,18 +35,19 @@ class MainActivity : AppCompatActivity() {
         Database.instance().initDatabase(applicationContext)
 //        Database.instance().clearWorkoutDayData()
 
-        Api.api.addWorkoutDay(WorkoutDayRequest())
-            .subscribeBy(
-                onSuccess = {
-                    Timber.e("Success")
-                },
-                onError = {
-                    Timber.e("Error")
-                })
+//        Api.api.addWorkoutDay(WorkoutDayRequest())
+//            .subscribeBy(
+//                onSuccess = {
+//                    Timber.e("Success")
+//                },
+//                onError = {
+//                    Timber.e("Error")
+//                })
 
 
 
         addExerciseSuggestionsIfNone()
+        addTargetRestDaysIfNone()
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
@@ -69,5 +68,13 @@ class MainActivity : AppCompatActivity() {
 
             Database.instance().storeWorkoutDayData(initialData)
         }
+    }
+
+    private fun addTargetRestDaysIfNone() {
+        val map = hashMapOf<ExerciseType.MuscleGroup, Int>()
+        for (muscle in ExerciseType.MuscleGroup.values()) {
+            map[muscle] = 2
+        }
+        Database.instance().storeTargetRestData(map)
     }
 }

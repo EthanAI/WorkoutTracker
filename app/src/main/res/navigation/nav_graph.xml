@@ -8,10 +8,13 @@
               android:label="MainFragment">
         <action android:id="@+id/action_mainFragment_to_editorFragment"
                 app:destination="@id/editorFragment"/>
+        <action android:id="@+id/action_mainFragment_to_restFragment" app:destination="@id/restFragment"/>
     </fragment>
     <fragment android:id="@+id/editorFragment"
               android:name="com.selfawarelab.workouttracker.editor.EditorFragment"
               android:label="EditorFragment">
         <argument android:name="calendarMills" app:argType="long"/>
     </fragment>
+    <fragment android:id="@+id/restFragment" android:name="com.selfawarelab.workouttracker.RestFragment"
+              android:label="RestFragment"/>
 </navigation>

@@ -10,6 +10,7 @@ import com.selfawarelab.workouttracker.ExerciseType.Companion.LATERAL_RAISE
 import com.selfawarelab.workouttracker.ExerciseType.Companion.LAT_PULLDOWN
 import com.selfawarelab.workouttracker.ExerciseType.Companion.ROW
 import com.selfawarelab.workouttracker.ExerciseType.Companion.SHRUGS
+import com.selfawarelab.workouttracker.ExerciseType.Companion.SITUP_DECLINE
 import com.selfawarelab.workouttracker.ExerciseType.Companion.SQUATS
 import com.selfawarelab.workouttracker.ExerciseType.Companion.TRICEP_PUSHDOWN
 import com.selfawarelab.workouttracker.Unit.LBS
@@ -69,14 +70,23 @@ fun Calendar.getDateString(): String {
     )} ${this.get(Calendar.DAY_OF_MONTH)}, ${this.get(Calendar.YEAR)}"
 }
 
+fun Calendar.ageInDays(): Int {
+    val today = getTodayStart()
+    return ((today.timeInMillis - getDayStart().timeInMillis) / (24 * 60 * 60 * 1000)).toInt()
+}
+
+fun Calendar.getDayStart(): Calendar {
+    this.set(Calendar.HOUR, 0)
+    this.set(Calendar.MINUTE, 0)
+    this.set(Calendar.SECOND, 0)
+    this.set(Calendar.MILLISECOND, 0)
+    this.set(Calendar.AM_PM, 0)
+    return this
+}
+
 fun getTodayStart(): Calendar {
     val calendar = Calendar.getInstance()
-    calendar.set(Calendar.HOUR, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    calendar.set(Calendar.AM_PM, 0)
-    return calendar
+    return calendar.getDayStart()
 }
 
 // TODO: Make val icon part of exercise so multiple icons can stack up per day
@@ -90,13 +100,19 @@ class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
     }
 }
 
-class Exercise(var type: ExerciseType, var weight: Int, var unit: Unit, var reps: Reps) {
-    constructor(type: ExerciseType, weight: Int, unit: Unit, vararg reps: Int) : this(type, weight, unit, Reps(*reps))
-    constructor() : this(ExerciseType(), 0, LBS, Reps())
+class Exercise(var type: ExerciseType, var weight: Int, var unit: Unit, var reps: Reps, var time: Calendar) {
+    constructor(type: ExerciseType, weight: Int, unit: Unit, vararg reps: Int, time: Calendar) : this(type, weight, unit, Reps(*reps), time)
+    constructor() : this(ExerciseType(), 0, LBS, Reps(), Calendar.getInstance())
 
     companion object {
-        fun getPlaceholder(): Exercise {
-            return Exercise(ExerciseType(), 50, LBS, 10, 10, 10)
+        private fun getPlaceholder(): Exercise {
+            return Exercise(ExerciseType(), 50, LBS, 10, 10, 10, time = Calendar.getInstance())
+        }
+
+        fun getPlaceholder(day: Calendar): Exercise {
+            val exercise = getPlaceholder()
+            exercise.time = day
+            return exercise
         }
     }
 
@@ -124,16 +140,20 @@ class Reps(val sets: MutableList<Int>) {
 fun getInitialExerciseSuggestionList(): MutableList<Exercise> {
     val exerciseSuggestionList = mutableListOf<Exercise>()
 
-    exerciseSuggestionList.add(Exercise(CURL_PAIR, 50, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(TRICEP_PUSHDOWN, 60, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(LAT_PULLDOWN, 100, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(ROW, 110, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(SHRUGS, 60, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(BENCHPRESS, 100, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(BENCHPRESS_INCLINE, 90, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(LATERAL_RAISE, 10, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(BACK_EXTENSION, 0, LBS, 10, 10, 10))
-    exerciseSuggestionList.add(Exercise(SQUATS, 0, LBS, 10, 10, 10))
+    val ancientDay = getTodayStart()
+    ancientDay.timeInMillis = 0
+
+    exerciseSuggestionList.add(Exercise(CURL_PAIR, 50, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(TRICEP_PUSHDOWN, 60, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(LAT_PULLDOWN, 100, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(ROW, 110, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(SHRUGS, 60, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS, 100, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS_INCLINE, 90, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(LATERAL_RAISE, 10, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(BACK_EXTENSION, 0, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(SQUATS, 0, LBS, 10, 10, 10, time = ancientDay))
+    exerciseSuggestionList.add(Exercise(SITUP_DECLINE, 0, LBS, 13, 13, 13, time = ancientDay))
 
     return exerciseSuggestionList
 }

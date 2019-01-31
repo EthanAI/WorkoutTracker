@@ -58,7 +58,7 @@ class EditorFragment : Fragment() {
         }
 
         addExercise.setOnClickListener { _ ->
-            workoutDay.addExercise(Exercise.getPlaceholder())
+            workoutDay.addExercise(Exercise.getPlaceholder(workoutDay.day))
             editorAdapter.notifyDataSetChanged()
         }
 
@@ -80,6 +80,7 @@ class EditorFragment : Fragment() {
 
         suggestionAdapter.onClickSubject.subscribeBy(
             onNext = { exercise: Exercise ->
+                exercise.time = workoutDay.day
                 workoutDay.addExercise(exercise)
                 editorAdapter.notifyDataSetChanged()
                 Timber.e(workoutDay.workout.toString())
