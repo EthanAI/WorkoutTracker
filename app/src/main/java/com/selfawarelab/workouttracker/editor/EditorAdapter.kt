@@ -39,9 +39,7 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
         fun bindData(exercise: Exercise) {
             itemView.let { itemView ->
                 itemView.name.text = exercise.type.name
-                itemView.weight.text = exercise.weight.toString()
-                itemView.unit.text = exercise.unit.string
-                itemView.reps.text = exercise.reps.toString()
+                itemView.sets.text = exercise.toSetListString()
 
                 // Allow item deletion
                 itemView.delete_button.visibility = VISIBLE
@@ -102,12 +100,8 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                     }
                 }
 
-                val weightClickListener = getWeightOnClickListener(exercise, this@EditorAdapter)
-                itemView.weight.setOnClickListener(weightClickListener)
-                itemView.unit.setOnClickListener(weightClickListener)
-
-                val repsClickListener = getRepsOnClickListener(exercise, this@EditorAdapter)
-                itemView.reps.setOnClickListener(repsClickListener)
+                val setsClickListener = getSetsOnClickListener(exercise, this@EditorAdapter)
+                itemView.sets.setOnClickListener(setsClickListener)
             }
         }
     }

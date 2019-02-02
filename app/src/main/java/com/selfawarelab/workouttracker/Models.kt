@@ -4,14 +4,20 @@ import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.selfawarelab.workouttracker.ExerciseType.Companion.BACK_EXTENSION
 import com.selfawarelab.workouttracker.ExerciseType.Companion.BENCHPRESS
+import com.selfawarelab.workouttracker.ExerciseType.Companion.BENCHPRESS_DB
+import com.selfawarelab.workouttracker.ExerciseType.Companion.BENCHPRESS_DB_INCLINE
 import com.selfawarelab.workouttracker.ExerciseType.Companion.BENCHPRESS_INCLINE
+import com.selfawarelab.workouttracker.ExerciseType.Companion.CURL_DB
 import com.selfawarelab.workouttracker.ExerciseType.Companion.CURL_PAIR
 import com.selfawarelab.workouttracker.ExerciseType.Companion.LATERAL_RAISE
 import com.selfawarelab.workouttracker.ExerciseType.Companion.LAT_PULLDOWN
+import com.selfawarelab.workouttracker.ExerciseType.Companion.PULLUP
 import com.selfawarelab.workouttracker.ExerciseType.Companion.ROW
 import com.selfawarelab.workouttracker.ExerciseType.Companion.SHRUGS
+import com.selfawarelab.workouttracker.ExerciseType.Companion.SITUP
 import com.selfawarelab.workouttracker.ExerciseType.Companion.SITUP_DECLINE
 import com.selfawarelab.workouttracker.ExerciseType.Companion.SQUATS
+import com.selfawarelab.workouttracker.ExerciseType.Companion.TRICEP_DB
 import com.selfawarelab.workouttracker.ExerciseType.Companion.TRICEP_PUSHDOWN
 import com.selfawarelab.workouttracker.Unit.LBS
 import java.util.*
@@ -53,6 +59,97 @@ class WorkoutDay(val workout: Workout, val day: Calendar, var icon: Int, var isE
     }
 }
 
+// TODO: Make val icon part of exercise so multiple icons can stack up per day
+class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
+    constructor() : this(mutableListOf<Exercise>(), R.drawable.ic_accessibility_black_24dp)
+    constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, R.drawable.ic_accessibility_black_24dp)
+    constructor(mDrawable: Int) : this(mutableListOf<Exercise>(), mDrawable)
+
+    override fun toString(): String {
+        return exerciseList.joinToString { " " }
+    }
+}
+
+class Exercise(var type: ExerciseType, val unit: Unit, var setList: MutableList<Set>, var time: Calendar) {
+    constructor() : this(ExerciseType(), LBS, mutableListOf(), Calendar.getInstance())
+
+    companion object {
+        private fun getPlaceholder(): Exercise {
+            return Exercise(ExerciseType(), LBS, getPlaceholderSetList(), time = Calendar.getInstance())
+        }
+
+        fun getPlaceholder(day: Calendar): Exercise {
+            val exercise = getPlaceholder()
+            exercise.time = day
+            return exercise
+        }
+
+        private fun getPlaceholderSetList(): MutableList<Set> {
+            return mutableListOf(Set(50, 10), Set(50, 10), Set(50, 10))
+        }
+
+        fun getPlaceholderSetList(weight: Int): MutableList<Set> {
+            return mutableListOf(Set(weight, 10), Set(weight, 10), Set(weight, 10))
+        }
+    }
+
+    fun toSetListString(): String {
+        return if (constantWeight(setList)) {
+            setList.fold("${setList.first().weight} ${unit.string} x") { string: String, set -> string.plus(" ${set.count}") }
+        } else {
+            setList.fold("") { string: String, set -> string.plus(" ${set.weight}x${set.count}") }
+        }
+    }
+
+    private fun constantWeight(setList: MutableList<Set>): Boolean {
+        return setList.all { it.weight == setList.first().weight }
+    }
+
+//    val averageWeight: Int = if(setList.isEmpty()) 0 else setList.map { it.weight }.average().toInt()
+
+    override fun toString(): String {
+        return "$type $setList $time"
+    }
+}
+
+class Set(var weight: Int, var count: Int) {
+    constructor() : this(0, 0)
+}
+
+
+enum class Unit(val string: String) {
+    LBS("lbs."),
+    KGS("kgs"),
+    MACHINE("sel.")
+}
+
+fun getInitialExerciseSuggestionList(): MutableList<Exercise> {
+    val exerciseSuggestionList = mutableListOf<Exercise>()
+
+    val ancientDay = getTodayStart()
+    ancientDay.timeInMillis = 0
+
+    exerciseSuggestionList.add(Exercise(CURL_PAIR, LBS, Exercise.getPlaceholderSetList(50), ancientDay))
+    exerciseSuggestionList.add(Exercise(CURL_DB, LBS, Exercise.getPlaceholderSetList(50), ancientDay))
+    exerciseSuggestionList.add(Exercise(TRICEP_PUSHDOWN, LBS, Exercise.getPlaceholderSetList(60), ancientDay))
+    exerciseSuggestionList.add(Exercise(TRICEP_DB, LBS, Exercise.getPlaceholderSetList(60), ancientDay))
+    exerciseSuggestionList.add(Exercise(LAT_PULLDOWN, LBS, Exercise.getPlaceholderSetList(100), ancientDay))
+    exerciseSuggestionList.add(Exercise(PULLUP, LBS, Exercise.getPlaceholderSetList(100), ancientDay))
+    exerciseSuggestionList.add(Exercise(ROW, LBS, Exercise.getPlaceholderSetList(110), ancientDay))
+    exerciseSuggestionList.add(Exercise(SHRUGS, LBS, Exercise.getPlaceholderSetList(60), ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS, LBS, Exercise.getPlaceholderSetList(100), ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS_DB, LBS, Exercise.getPlaceholderSetList(100), ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS_INCLINE, LBS, Exercise.getPlaceholderSetList(90), ancientDay))
+    exerciseSuggestionList.add(Exercise(BENCHPRESS_DB_INCLINE, LBS, Exercise.getPlaceholderSetList(90), ancientDay))
+    exerciseSuggestionList.add(Exercise(LATERAL_RAISE, LBS, Exercise.getPlaceholderSetList(10), ancientDay))
+    exerciseSuggestionList.add(Exercise(BACK_EXTENSION, LBS, Exercise.getPlaceholderSetList(0), ancientDay))
+    exerciseSuggestionList.add(Exercise(SQUATS, LBS, Exercise.getPlaceholderSetList(0), ancientDay))
+    exerciseSuggestionList.add(Exercise(SITUP, LBS, Exercise.getPlaceholderSetList(0), ancientDay))
+    exerciseSuggestionList.add(Exercise(SITUP_DECLINE, LBS, Exercise.getPlaceholderSetList(0), ancientDay))
+
+    return exerciseSuggestionList
+}
+
 fun CalendarView.setEvents(workoutDayList: MutableList<WorkoutDay>) {
     val calendarData = workoutDayList.fold(mutableListOf<EventDay>()) { calendarData, workoutDay ->
         calendarData.add(workoutDay.eventDay)
@@ -60,7 +157,6 @@ fun CalendarView.setEvents(workoutDayList: MutableList<WorkoutDay>) {
     }
     this.setEvents(calendarData)
 }
-
 
 fun Calendar.getDateString(): String {
     return "${this.getDisplayName(
@@ -87,73 +183,4 @@ fun Calendar.getDayStart(): Calendar {
 fun getTodayStart(): Calendar {
     val calendar = Calendar.getInstance()
     return calendar.getDayStart()
-}
-
-// TODO: Make val icon part of exercise so multiple icons can stack up per day
-class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
-    constructor() : this(mutableListOf<Exercise>(), R.drawable.ic_accessibility_black_24dp)
-    constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, R.drawable.ic_accessibility_black_24dp)
-    constructor(mDrawable: Int) : this(mutableListOf<Exercise>(), mDrawable)
-
-    override fun toString(): String {
-        return exerciseList.joinToString { "\n" }
-    }
-}
-
-class Exercise(var type: ExerciseType, var weight: Int, var unit: Unit, var reps: Reps, var time: Calendar) {
-    constructor(type: ExerciseType, weight: Int, unit: Unit, vararg reps: Int, time: Calendar) : this(type, weight, unit, Reps(*reps), time)
-    constructor() : this(ExerciseType(), 0, LBS, Reps(), Calendar.getInstance())
-
-    companion object {
-        private fun getPlaceholder(): Exercise {
-            return Exercise(ExerciseType(), 50, LBS, 10, 10, 10, time = Calendar.getInstance())
-        }
-
-        fun getPlaceholder(day: Calendar): Exercise {
-            val exercise = getPlaceholder()
-            exercise.time = day
-            return exercise
-        }
-    }
-
-    override fun toString(): String {
-        return "$type $weight $unit $reps"
-    }
-}
-
-enum class Unit(val string: String) {
-    LBS("lbs."),
-    KGS("kgs"),
-    MACHINE("sel.")
-}
-
-// TODO: Handle different weights per set
-class Reps(val sets: MutableList<Int>) {
-    constructor(vararg sets: Int) : this(mutableListOf(*sets.toTypedArray()))
-    constructor() : this(mutableListOf()) // Jackson deserialization seems to require empty constructors
-
-    override fun toString(): String {
-        return sets.fold("") { string: String, int -> string.plus("$int ") }
-    }
-}
-
-fun getInitialExerciseSuggestionList(): MutableList<Exercise> {
-    val exerciseSuggestionList = mutableListOf<Exercise>()
-
-    val ancientDay = getTodayStart()
-    ancientDay.timeInMillis = 0
-
-    exerciseSuggestionList.add(Exercise(CURL_PAIR, 50, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(TRICEP_PUSHDOWN, 60, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(LAT_PULLDOWN, 100, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(ROW, 110, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(SHRUGS, 60, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(BENCHPRESS, 100, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(BENCHPRESS_INCLINE, 90, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(LATERAL_RAISE, 10, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(BACK_EXTENSION, 0, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(SQUATS, 0, LBS, 10, 10, 10, time = ancientDay))
-    exerciseSuggestionList.add(Exercise(SITUP_DECLINE, 0, LBS, 13, 13, 13, time = ancientDay))
-
-    return exerciseSuggestionList
 }

@@ -37,7 +37,6 @@
 
     </LinearLayout>
 
-
     <Button
             android:id="@+id/cancelReps"
             android:layout_width="wrap_content"
