@@ -64,17 +64,17 @@ class ExerciseType(val name: String, vararg val muscles: MuscleGroup, extraOffse
         return muscle.ordinal * 100 + offset
     }
 
-    enum class MuscleGroup {
-        BICEPS,
-        TRICEPS,
-        SHOULDERS,
-        CHEST,
-        BACK_TRAPS,
-        BACK_LATS,
-        BACK_LUMBAR,
-        ABS,
-        GLUTES,
-        LEGS
+    enum class MuscleGroup (val prettyName: String, val icon: Int) {
+        BICEPS("Biceps", R.drawable.ic_accessibility_black_24dp),
+        TRICEPS("Triceps", R.drawable.ic_accessibility_black_24dp),
+        SHOULDERS("Shoulders", R.drawable.ic_accessibility_black_24dp),
+        CHEST("Chest", R.drawable.ic_accessibility_black_24dp),
+        BACK_TRAPS("Back Traps", R.drawable.ic_accessibility_black_24dp),
+        BACK_LATS("Back Lats", R.drawable.ic_accessibility_black_24dp),
+        BACK_LUMBAR("Back Lumbar", R.drawable.ic_accessibility_black_24dp),
+        ABS("Abs", R.drawable.ic_accessibility_black_24dp),
+        GLUTES("Glutes", R.drawable.ic_accessibility_black_24dp),
+        LEGS("Legs", R.drawable.ic_accessibility_black_24dp)
     }
 
     override fun toString(): String {

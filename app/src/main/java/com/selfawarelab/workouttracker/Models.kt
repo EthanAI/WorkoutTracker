@@ -54,7 +54,7 @@ class WorkoutDay(val exerciseList: MutableList<Exercise>, val day: Calendar, var
     }
 }
 
-class Exercise(var type: ExerciseType, val unit: Unit, var setList: MutableList<Set>, var time: Calendar) {
+class Exercise(var type: ExerciseType, private val unit: Unit, var setList: MutableList<Set>, var time: Calendar) {
     constructor() : this(ExerciseType(), LBS, mutableListOf(), Calendar.getInstance())
 
     companion object {

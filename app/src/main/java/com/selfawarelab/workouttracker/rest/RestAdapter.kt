@@ -34,7 +34,7 @@ class RestAdapter() : RecyclerView.Adapter<RestAdapter.ViewHolder>() {
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         fun bindData(entry: Pair<ExerciseType.MuscleGroup, Pair<Exercise?, Int>?>) {
             itemView.let {
-                it.muscle.text = entry.first.name
+                it.muscle.text = entry.first.prettyName
                 it.age.text = entry.second?.first?.time?.ageInDays().toString()
                 it.targetAge.text = entry.second?.second.toString()
 
