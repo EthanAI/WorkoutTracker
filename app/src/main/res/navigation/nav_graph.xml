@@ -15,6 +15,6 @@
               android:label="EditorFragment">
         <argument android:name="calendarMills" app:argType="long"/>
     </fragment>
-    <fragment android:id="@+id/restFragment" android:name="com.selfawarelab.workouttracker.RestFragment"
+    <fragment android:id="@+id/restFragment" android:name="com.selfawarelab.workouttracker.rest.RestFragment"
               android:label="RestFragment"/>
 </navigation>

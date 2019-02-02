@@ -1,10 +1,14 @@
-package com.selfawarelab.workouttracker
+package com.selfawarelab.workouttracker.rest
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.selfawarelab.workouttracker.Exercise
+import com.selfawarelab.workouttracker.ExerciseType
+import com.selfawarelab.workouttracker.R
+import com.selfawarelab.workouttracker.ageInDays
 import kotlinx.android.synthetic.main.item_rest.view.*
 
 class RestAdapter() : RecyclerView.Adapter<RestAdapter.ViewHolder>() {
