@@ -2,6 +2,15 @@ package com.selfawarelab.workouttracker
 
 import com.selfawarelab.workouttracker.ExerciseType.MuscleGroup.*
 
+/*
+    Icons: Exercise categories:
+    Arms
+    Chest
+    Back
+    Legs
+    Shoulders
+    Core: abs, lower back
+ */
 class ExerciseType(val name: String, vararg val muscles: MuscleGroup, extraOffset: Boolean = false) {
     val id = generateId(muscles[0], extraOffset)
 

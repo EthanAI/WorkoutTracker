@@ -105,10 +105,8 @@ class Exercise(var type: ExerciseType, val unit: Unit, var setList: MutableList<
         return setList.all { it.weight == setList.first().weight }
     }
 
-//    val averageWeight: Int = if(setList.isEmpty()) 0 else setList.map { it.weight }.average().toInt()
-
     override fun toString(): String {
-        return "$type $setList $time"
+        return "$type\n${this.toSetListString()}\n${time.time}"
     }
 }
 

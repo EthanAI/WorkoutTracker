@@ -84,7 +84,6 @@ fun addPairPicker(dialog: Dialog, pickerLayoutList: MutableList<View>, set: Set 
     if (pickerLayoutList.size == 5) return // Max size
 
     // TODO: Headers
-    // TODO: Alternating colors
     // Build weight Picker
     val weightRepPickerLayout = LayoutInflater.from(dialog.context).inflate(R.layout.weight_rep_pickers, dialog.pickerLayout, false)
 

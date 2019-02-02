@@ -52,6 +52,7 @@ class MainFragment : Fragment() {
 
         viewModel.loadWorkoutListFromDb()
         viewModel.loadTargetRestDataFromDb()
+        streakHeader.text = "Workout Days in a row: ${viewModel.getWorkoutDayStreak()}"
         calendarView.setEvents(viewModel.workoutDayList)
         Timber.e("workoutDayList: ${viewModel.workoutDayList.size}")
     }

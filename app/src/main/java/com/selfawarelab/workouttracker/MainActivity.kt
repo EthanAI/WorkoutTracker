@@ -4,35 +4,25 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import com.selfawarelab.workouttracker.database.Database
-import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
-/*
-    Icons: Exercise categories:
-    Arms
-    Chest
-    Back
-    Legs
-    Shoulders
-    Core: abs, lower back
- */
 // TODO: multiple icons per day
 // TODO: icons kept in Exercise object
 // TODO: Backup to cloud
-// TODO: Possible weight changes per set
 // TODO: Total / streak counter
 // TODO: Input sets on the fly during rest period
 // TODO: Log past workouts (calendar UI)
 // TODO: Time workouts
 // TODO: Public domain diagrams
 // TODO: +/- Buttons for rep count
+// TODO: Tabbed navigtaion
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.plant(Timber.DebugTree())
-        Database.instance().initDatabase(applicationContext)
+        initializeApp()
+
 //        Database.instance().clearWorkoutDayData()
 
 //        Api.api.addWorkoutDay(WorkoutDayRequest())
@@ -45,9 +35,13 @@ class MainActivity : AppCompatActivity() {
 //                })
 
 
-
         addExerciseSuggestionsIfNone()
         addTargetRestDaysIfNone()
+    }
+
+    private fun initializeApp() {
+        Timber.plant(Timber.DebugTree())
+        Database.instance().initDatabase(applicationContext)
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()

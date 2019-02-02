@@ -2,6 +2,8 @@ package com.selfawarelab.workouttracker
 
 import android.arch.lifecycle.ViewModel
 import com.selfawarelab.workouttracker.database.Database
+import java.util.*
+
 
 class MainViewModel : ViewModel() {
     val workoutDayList = mutableListOf<WorkoutDay>()
@@ -38,6 +40,21 @@ class MainViewModel : ViewModel() {
         calendar.timeInMillis = timeInMills
 
         return findExistingWorkoutDayByDate(timeInMills) ?: WorkoutDay(calendar)
+    }
+
+
+    fun getWorkoutDayStreak(): Int {
+        var streakCount = 0
+
+        val checkDay = getTodayStart()
+        var checkWorkoutDay = getWorkoutDayForDate(checkDay.timeInMillis)
+        while(checkWorkoutDay.workout.exerciseList.isNotEmpty()) {
+            streakCount++
+            checkDay.add(Calendar.DATE, -1)
+            checkWorkoutDay = getWorkoutDayForDate(checkDay.timeInMillis)
+        }
+
+        return streakCount
     }
 
     fun getRestData(): List<Pair<ExerciseType.MuscleGroup, Pair<Exercise?, Int>?>> {
