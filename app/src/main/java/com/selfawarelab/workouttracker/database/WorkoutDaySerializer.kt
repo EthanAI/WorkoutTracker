@@ -18,7 +18,7 @@ class WorkoutDaySerializer private constructor(t: Class<WorkoutDay>?) : StdSeria
 
         jsonGenerator.let {
             it.writeStartObject()
-            it.writeObjectField("workout", value.workout)
+            it.writeObjectField("exerciseList", value.exerciseList)
             it.writeObjectField("day", value.day)
             it.writeNumberField("icon", value.icon)
             it.writeBooleanField("isEnabled", value.isEnabled)

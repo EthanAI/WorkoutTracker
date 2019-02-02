@@ -28,6 +28,21 @@ class MainViewModel : ViewModel() {
         targetRestDays = Database.instance().loadTargetRestData()
     }
 
+    fun getUniqueRecentExercises(): List<Exercise> {
+        workoutDayList.sortByDescending { it.day.timeInMillis } // Newest First // TODO: This is expensive with a long history keep in order another way
+
+        val el = workoutDayList.flatMap { it.exerciseList }
+        // Collect only the most recent instance of each exercise
+        val exerciseMap = el
+            .fold(HashMap()) { hashMap: HashMap<Int, Exercise>, exercise ->
+                if (!hashMap.containsKey(exercise.type.id))
+                    hashMap[exercise.type.id] = exercise
+                hashMap
+            }
+        // Sort alphabetically
+        return exerciseMap.values.toList().sortedBy { it.type.name }
+    }
+
     private fun findExistingWorkoutDayByDate(timeInMills: Long): WorkoutDay? {
         val calendar = getTodayStart()
         calendar.timeInMillis = timeInMills
@@ -48,7 +63,7 @@ class MainViewModel : ViewModel() {
 
         val checkDay = getTodayStart()
         var checkWorkoutDay = getWorkoutDayForDate(checkDay.timeInMillis)
-        while(checkWorkoutDay.workout.exerciseList.isNotEmpty()) {
+        while(checkWorkoutDay.exerciseList.isNotEmpty()) {
             streakCount++
             checkDay.add(Calendar.DATE, -1)
             checkWorkoutDay = getWorkoutDayForDate(checkDay.timeInMillis)
@@ -65,7 +80,7 @@ class MainViewModel : ViewModel() {
         }
 
         val exerciseList = workoutDayList
-            .flatMap { workoutDay -> workoutDay.workout.exerciseList }
+            .flatMap { workoutDay -> workoutDay.exerciseList }
         val exerciseListRecent = exerciseList.sortedByDescending { exercise -> exercise.time.timeInMillis }
         exerciseListRecent.forEach { exercise ->
             for (muscle in exercise.type.muscles) {

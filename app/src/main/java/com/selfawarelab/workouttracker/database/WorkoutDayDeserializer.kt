@@ -2,12 +2,14 @@ package com.selfawarelab.workouttracker.database
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.module.kotlin.treeToValue
-import com.selfawarelab.workouttracker.Workout
+import com.selfawarelab.workouttracker.Exercise
 import com.selfawarelab.workouttracker.WorkoutDay
 import com.selfawarelab.workouttracker.getTodayStart
 import java.io.IOException
@@ -20,8 +22,9 @@ internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDe
     override fun deserialize(jsonParser: JsonParser, ctxt: DeserializationContext): WorkoutDay {
         val node = jsonParser.codec.readTree<JsonNode>(jsonParser)
 
-        val workoutNode = node.get("workout")
-        val workout = ObjectMapper().treeToValue<Workout>(workoutNode)
+        val exerciseListNode = node.get("exerciseList")
+        val reader = ObjectMapper().readerFor(object : TypeReference<MutableList<Exercise>>() {})
+        val exerciseList = reader.readValue<MutableList<Exercise>>(exerciseListNode)
 
         val dayString = node.get("day").asLong()
         val day = getTodayStart()
@@ -29,6 +32,6 @@ internal class WorkoutDayDeserializer private constructor(vc: Class<*>?) : StdDe
 
         val icon = node.get("icon").asInt()
 
-        return WorkoutDay(workout, day, icon)
+        return WorkoutDay(exerciseList, day, icon)
     }
 }

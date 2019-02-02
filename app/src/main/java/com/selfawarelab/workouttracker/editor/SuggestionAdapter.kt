@@ -20,27 +20,8 @@ class SuggestionAdapter : RecyclerView.Adapter<SuggestionAdapter.SuggestionViewH
         return SuggestionViewHolder(view)
     }
 
-    fun setDataList(dataSource: MutableList<WorkoutDay>) {
-        data = getUniqueRecentExercises(dataSource)
-    }
-
-    private fun getUniqueRecentExercises(dataSource: MutableList<WorkoutDay>): List<Exercise>? {
-        dataSource.reverse() // Recent first
-        // get all the exercises
-        val exerciseList = dataSource
-            .fold(mutableListOf()) { list: MutableList<Exercise>, workoutDay ->
-                list.addAll(workoutDay.workout.exerciseList)
-                list
-            }
-        // Collect only the most recent instance of each exercise
-        val exerciseMap = exerciseList
-            .fold(HashMap()) { hashMap: HashMap<Int, Exercise>, exercise ->
-                if (!hashMap.containsKey(exercise.type.id))
-                    hashMap[exercise.type.id] = exercise
-                hashMap
-            }
-        // Sort alphabetically
-        return exerciseMap.values.toList().sortedBy { it.type.name }
+    fun setDataList(dataSource: List<Exercise>) {
+        data = dataSource
     }
 
     override fun getItemCount(): Int {

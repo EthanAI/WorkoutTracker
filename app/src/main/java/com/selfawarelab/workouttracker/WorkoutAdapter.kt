@@ -24,11 +24,11 @@ class WorkoutAdapter() : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>(
 
     override fun getItemCount(): Int {
         return if(data == null) 0
-        else data?.workout?.exerciseList!!.size
+        else data?.exerciseList!!.size
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        val exercise = data?.workout!!.exerciseList[position]
+        val exercise = data?.exerciseList!![position]
         holder.bindData(exercise)
     }
 

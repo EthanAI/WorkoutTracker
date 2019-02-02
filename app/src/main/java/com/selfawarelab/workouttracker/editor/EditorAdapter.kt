@@ -27,11 +27,11 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
 
     override fun getItemCount(): Int {
         return if (workoutDay == null) 0
-        else workoutDay?.workout?.exerciseList!!.size
+        else workoutDay?.exerciseList!!.size
     }
 
     override fun onBindViewHolder(holder: EditorViewHolder, position: Int) {
-        val exercise = workoutDay?.workout!!.exerciseList[position]
+        val exercise = workoutDay?.exerciseList!![position]
         holder.bindData(exercise)
     }
 

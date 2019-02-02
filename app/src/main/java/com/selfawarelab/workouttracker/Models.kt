@@ -23,32 +23,27 @@ import com.selfawarelab.workouttracker.Unit.LBS
 import java.util.*
 
 // TODO: make getters and setters to make duplicate fields protected
-class WorkoutDay(val workout: Workout, val day: Calendar, var icon: Int, var isEnabled: Boolean) { // Inheritance sucks
+// TODO: Build icon out of the icons from the exercises of that day
+class WorkoutDay(val exerciseList: MutableList<Exercise>, val day: Calendar, var icon: Int, var isEnabled: Boolean) { // Inheritance sucks
     var eventDay: EventDay = EventDay(day, icon) // Easier to recreate from scratch than modify via reflection
 
-    constructor() : this(Workout(), getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
-    constructor(calendar: Calendar) : this(Workout(), calendar, R.drawable.ic_accessibility_black_24dp, true)
-    constructor(workout: Workout) : this(workout, getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
-    constructor(calendar: Calendar, workout: Workout) : this(
-        workout,
-        calendar,
-        R.drawable.ic_accessibility_black_24dp,
-        true
-    )
-
-    constructor(workout: Workout, day: Calendar, icon: Int) : this(workout, day, icon, true)
+    constructor() : this(mutableListOf<Exercise>(), getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor(calendar: Calendar) : this(mutableListOf<Exercise>(), calendar, R.drawable.ic_accessibility_black_24dp, true)
+    constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, getTodayStart(), R.drawable.ic_accessibility_black_24dp, true)
+    constructor(calendar: Calendar, exerciseList: MutableList<Exercise>) : this(exerciseList, calendar, R.drawable.ic_accessibility_black_24dp, true)
+    constructor(exerciseList: MutableList<Exercise>, day: Calendar, icon: Int) : this(exerciseList, day, icon, true)
 
     fun addExercise(exercise: Exercise) {
-        workout.exerciseList.add(exercise)
-        if (workout.exerciseList.size == 1) {
+        exerciseList.add(exercise)
+        if (exerciseList.size == 1) {
             icon = R.drawable.ic_accessibility_black_24dp
             updateEventDay()
         }
     }
 
     fun removeExercise(exercise: Exercise) {
-        workout.exerciseList.remove(exercise)
-        if (workout.exerciseList.isEmpty()) {
+        exerciseList.remove(exercise)
+        if (exerciseList.isEmpty()) {
             icon = R.drawable.navigation_empty_icon
             updateEventDay()
         }
@@ -56,17 +51,6 @@ class WorkoutDay(val workout: Workout, val day: Calendar, var icon: Int, var isE
 
     private fun updateEventDay(day: Calendar = this.day, icon: Int = this.icon) {
         eventDay = EventDay(day, icon)
-    }
-}
-
-// TODO: Make val icon part of exercise so multiple icons can stack up per day
-class Workout(val exerciseList: MutableList<Exercise>, val icon: Int) {
-    constructor() : this(mutableListOf<Exercise>(), R.drawable.ic_accessibility_black_24dp)
-    constructor(exerciseList: MutableList<Exercise>) : this(exerciseList, R.drawable.ic_accessibility_black_24dp)
-    constructor(mDrawable: Int) : this(mutableListOf<Exercise>(), mDrawable)
-
-    override fun toString(): String {
-        return exerciseList.joinToString { " " }
     }
 }
 

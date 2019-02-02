@@ -10,14 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.selfawarelab.workouttracker.*
-import com.selfawarelab.workouttracker.database.Database
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_add.*
 import timber.log.Timber
 import java.util.*
 
 class EditorFragment : Fragment() {
-    private val exerciseSuggestionList = Database.instance().loadWorkoutDayData()?.toMutableList()!!
+    private val exerciseSuggestionList by lazy { viewModel.getUniqueRecentExercises() }
     private lateinit var workoutDay: WorkoutDay
     private val suggestionAdapter = SuggestionAdapter()
     private val editorAdapter = EditorAdapter()
@@ -63,7 +62,7 @@ class EditorFragment : Fragment() {
         }
 
         submit.setOnClickListener {
-            Timber.e("${editorAdapter.workoutDay?.workout?.exerciseList?.size}")
+            Timber.e("${editorAdapter.workoutDay?.exerciseList?.size}")
             viewModel.addWorkoutDay(workoutDay)
             findNavController().popBackStack()
         }
@@ -83,7 +82,7 @@ class EditorFragment : Fragment() {
                 exercise.time = workoutDay.day
                 workoutDay.addExercise(exercise)
                 editorAdapter.notifyDataSetChanged()
-                Timber.e(workoutDay.workout.toString())
+                Timber.e(workoutDay.toString())
             }
         )
     }

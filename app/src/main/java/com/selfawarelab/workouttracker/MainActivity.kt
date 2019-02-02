@@ -49,14 +49,13 @@ class MainActivity : AppCompatActivity() {
     private fun addExerciseSuggestionsIfNone() {
         // A little hacky to make a dated object and hide it in the past, but works for now
         val workoutDayList = Database.instance().loadWorkoutDayData()
-        if (workoutDayList.isEmpty() || workoutDayList[0].workout.exerciseList.isEmpty()) {
+        if (workoutDayList.isEmpty() || workoutDayList[0].exerciseList.isEmpty()) {
             val initialData = mutableListOf<WorkoutDay>()
 
             val exerciseSuggestionList = getInitialExerciseSuggestionList()
             val ancientDay = getTodayStart()
             ancientDay.timeInMillis = 0
-            val workout = Workout(exerciseSuggestionList)
-            val workoutDay = WorkoutDay(ancientDay, workout)
+            val workoutDay = WorkoutDay(ancientDay, exerciseSuggestionList)
 
             initialData.add(workoutDay)
 
