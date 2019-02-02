@@ -1,12 +1,16 @@
 package com.selfawarelab.workouttracker.editor
 
 import android.app.Dialog
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.NumberPicker
 import com.selfawarelab.workouttracker.Exercise
 import com.selfawarelab.workouttracker.R
 import com.selfawarelab.workouttracker.Set
 import kotlinx.android.synthetic.main.sets_picker_dialog.*
+import kotlinx.android.synthetic.main.weight_rep_pickers.view.*
 
 // For Weight picking
 private const val weightIncrement = 5
@@ -39,8 +43,8 @@ private fun getRepValueList(): Array<String> {
     return valueList.reversed().toTypedArray()
 }
 
-fun pickerPairToSet(pickerPair: Pair<NumberPicker, NumberPicker>): Set {
-    return Set(positionToWeight(pickerPair.first.value), positionToRep(pickerPair.second.value))
+fun pickerPairToSet(pickerLayout: View): Set {
+    return Set(positionToWeight(pickerLayout.weight_picker.value), positionToRep(pickerLayout.rep_picker.value))
 }
 
 fun getSetsOnClickListener(exercise: Exercise, adapter: EditorAdapter): View.OnClickListener {
@@ -49,19 +53,18 @@ fun getSetsOnClickListener(exercise: Exercise, adapter: EditorAdapter): View.OnC
         dialog.setContentView(R.layout.sets_picker_dialog)
         dialog.setTitle("Reps")
 
-        val pickers =
-            mutableListOf<Pair<NumberPicker, NumberPicker>>() // Hold all the pickers we need for this (Weight & Rep picker pairs)
+        val pickerLayoutList = mutableListOf<View>() // Hold all the pickers we need for this (Weight & Rep picker pairs)
         // Add a weight and number picker for each set entry
         for (set in exercise.setList) {
-            addPairPicker(dialog, pickers, set)
+            addPairPicker(dialog, pickerLayoutList, set)
         }
 
-        dialog.addSet.setOnClickListener { addPairPicker(dialog, pickers, exercise.setList.last()) }
-        dialog.deleteSet.setOnClickListener { removeSetPicker(dialog, pickers) }
+        dialog.addSet.setOnClickListener { addPairPicker(dialog, pickerLayoutList, pickerPairToSet(pickerLayoutList.last())) }
+        dialog.deleteSet.setOnClickListener { removeSetPicker(dialog, pickerLayoutList) }
 
         dialog.saveReps.setOnClickListener {
-            val newSets = pickers.fold(mutableListOf<Set>()) { setList, pickerPair ->
-                setList.add(pickerPairToSet(pickerPair))
+            val newSets = pickerLayoutList.fold(mutableListOf<Set>()) { setList, pickerLayout ->
+                setList.add(pickerPairToSet(pickerLayout))
                 setList
             }
 
@@ -77,42 +80,41 @@ fun getSetsOnClickListener(exercise: Exercise, adapter: EditorAdapter): View.OnC
     }
 }
 
-fun addPairPicker(dialog: Dialog, pickers: MutableList<Pair<NumberPicker, NumberPicker>>, set: Set = Set(50, 10)) {
-    if (pickers.size == 5) return // Max size
+fun addPairPicker(dialog: Dialog, pickerLayoutList: MutableList<View>, set: Set = Set(50, 10)) {
+    if (pickerLayoutList.size == 5) return // Max size
 
     // TODO: Headers
     // TODO: Alternating colors
     // Build weight Picker
-    val weightPicker = NumberPicker(dialog.context).apply {
+    val weightRepPickerLayout = LayoutInflater.from(dialog.context).inflate(R.layout.weight_rep_pickers, dialog.pickerLayout, false)
+
+    weightRepPickerLayout.weight_picker.apply {
         this.displayedValues = getWeightValueList()
         this.minValue = 0
         this.maxValue = weightIncrementCount
         this.value = weightToPosition(set.weight)
         this.wrapSelectorWheel = false
-
-        val endPosition = dialog.pickerLayout.childCount - 1
-        dialog.pickerLayout.addView(this, endPosition)
     }
 
     // Build Rep Picker
-    val repPicker = NumberPicker(dialog.context).apply {
+    weightRepPickerLayout.rep_picker.apply {
         this.displayedValues = getRepValueList()
         this.minValue = 1
         this.maxValue = repMax
         this.value = repToPosition(set.count)
         this.wrapSelectorWheel = false
-
-        val endPosition = dialog.pickerLayout.childCount - 1
-        dialog.pickerLayout.addView(this, endPosition)
     }
-    pickers.add(Pair(weightPicker, repPicker))
+
+    if(pickerLayoutList.size % 2 == 0) weightRepPickerLayout.setBackgroundColor(Color.LTGRAY) else weightRepPickerLayout.setBackgroundColor(Color.WHITE)
+    val endPosition = dialog.pickerLayout.childCount - 1 // Insert before the buttons
+    dialog.pickerLayout.addView(weightRepPickerLayout, endPosition)
+    pickerLayoutList.add(weightRepPickerLayout)
 }
 
-private fun removeSetPicker(dialog: Dialog, pickers: MutableList<Pair<NumberPicker, NumberPicker>>) {
-    if (pickers.size == 1) return // Minimum size
+private fun removeSetPicker(dialog: Dialog, pickerLayoutList: MutableList<View>) {
+    if (pickerLayoutList.size == 1) return // Minimum size
 
     val lastPickerIndex = dialog.pickerLayout.childCount - 2
     dialog.pickerLayout.removeViewAt(lastPickerIndex)
-    pickers.removeAt(pickers.lastIndex)
-    pickers.removeAt(pickers.lastIndex - 1)
+    pickerLayoutList.removeAt(pickerLayoutList.lastIndex)
 }
