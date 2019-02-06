@@ -1,46 +1,73 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="400dp"
         android:layout_height="400dp">
 
+    <TextView
+            android:id="@+id/nameTitle"
+            android:layout_width="188dp"
+            android:layout_height="0dp"
+            android:text="Exercise Name: "
+            android:textAlignment="textEnd"
+            android:gravity="center_vertical|end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/name_edit_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/name_edit_text"
+    />
     <EditText
             android:id="@+id/name_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:hint="Name"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/muscle_picker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/nameTitle"
     />
 
     <TextView
             android:id="@+id/muscle_list"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="102dp"
             android:text="NONE"
-            app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/nameTitle"
+            app:layout_constraintBottom_toTopOf="@+id/delete_muscle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/muscle_picker"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/cancelType"/>
+            app:layout_constraintEnd_toStartOf="@+id/muscle_picker"
+    />
 
     <NumberPicker
             android:id="@+id/muscle_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/name_edit_text"
-            app:layout_constraintEnd_toStartOf="@id/add_type"
-    />
+            app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+            app:layout_constraintStart_toEndOf="@+id/muscle_list"
+            app:layout_constraintEnd_toStartOf="@+id/add_muscle"
+            app:layout_constraintBottom_toTopOf="@+id/saveType"/>
 
     <Button
-            android:id="@+id/add_type"
+            android:id="@+id/add_muscle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Muscle"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+            app:layout_constraintBottom_toTopOf="@+id/saveType"
+            app:layout_constraintStart_toEndOf="@+id/muscle_picker"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/saveType"/>
+    />
+
+    <Button
+            android:id="@+id/delete_muscle"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintTop_toBottomOf="@+id/muscle_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/muscle_picker"
+            app:layout_constraintBottom_toTopOf="@+id/cancelType"/>
 
     <Button
             android:id="@+id/cancelType"

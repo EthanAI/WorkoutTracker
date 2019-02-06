@@ -78,9 +78,16 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.EditorViewHolder>() {
                             this.wrapSelectorWheel = false
                         }
 
-                        it.add_type.setOnClickListener { _ ->
+                        it.add_muscle.setOnClickListener { _ ->
                             val selectedMuscleGroup = ExerciseType.MuscleGroup.values()[it.muscle_picker.value]
                             muscleGroupList.add(selectedMuscleGroup)
+                            it.muscle_list.text = muscleGroupList.fold("") {output, input ->
+                                output.plus(input.name + "\n")
+                            }
+                        }
+
+                        it.delete_muscle.setOnClickListener { _ ->
+                            muscleGroupList.remove(muscleGroupList.last())
                             it.muscle_list.text = muscleGroupList.fold("") {output, input ->
                                 output.plus(input.name + "\n")
                             }
